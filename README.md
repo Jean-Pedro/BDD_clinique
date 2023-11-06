@@ -16,11 +16,9 @@ Pour chaque entrée, on veut garder la date et l'heure auxquelles elle a été s
 
 Enfin, les médicaments sont identifiés par le nom de la molécule et sont accompagnés de quelques lignes de texte décrivant leurs effets. Un médicament n'est autorisé que pour certaines espèces.
 
-###Besoins
+### Besoins
 
 Le gestionnaire de la clinique veut pouvoir ajouter et mettre à jour la liste des personnels, des clients, des animaux traités et les médicaments utilisés. Il doit aussi pouvoir obtenir facilement des rapports d'activité et des informations statistiques, comme les quantités de médicaments consommés, le nombre de traitement ou de procédure effectuées dans la clinique, ou encore des statistiques sur les espèces d'animaux traités.
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
 
 ## Authors
