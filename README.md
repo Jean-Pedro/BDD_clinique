@@ -7,11 +7,11 @@ On vous charge de réaliser une application de gestion pour une clinique vétér
 Pour chaque animal traité, la clinique souhaite garder son nom, son espèce, sa date de naissance (qui peut être juste une année, ou inconnue), le numéro de sa puce d'identification (s'il en a), son numéro de passeport (s'il en a), la liste de ses propriétaires et la période durant laquelle l'animal était avec eux, ainsi que la liste des vétérinaires qui l'ont suivi et quand est-ce qu'ils l'ont fait. Il faut noter que le personnel de la clinique ne doit pas avoir d'animaux de compagnie traités dans la clinique.
 
 La clinique souhaite aussi garder le dossier médical de ses patients. Un dossier médical contient plusieurs entrés de différents types :
-    Une mesure de sa taille ou de son poids.
-    Un traitement prescrit avec la date de début, la durée, le nom et la quantité à prendre par jour pour chaque médicament prescrit (on peut prescrire plusieurs molécules dans un traitement). Seul un vétérinaire peut prescrire un traitement.
-    Des résultats d'analyses (sous forme de lien vers un document électronique)
-    Une observation générale faite lors d'une consultation et qui l'a faite.
-    Une procédure réalisée sur le patient avec sa description.
+* Une mesure de sa taille ou de son poids.
+* Un traitement prescrit avec la date de début, la durée, le nom et la quantité à prendre par jour pour chaque médicament prescrit (on peut prescrire plusieurs molécules dans un traitement). Seul un vétérinaire peut prescrire un traitement.
+* Des résultats d'analyses (sous forme de lien vers un document électronique)
+* Une observation générale faite lors d'une consultation et qui l'a faite.
+* Une procédure réalisée sur le patient avec sa description.
 Pour chaque entrée, on veut garder la date et l'heure auxquelles elle a été saisie.
 
 Enfin, les médicaments sont identifiés par le nom de la molécule et sont accompagnés de quelques lignes de texte décrivant leurs effets. Un médicament n'est autorisé que pour certaines espèces.
