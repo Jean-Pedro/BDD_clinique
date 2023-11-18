@@ -144,3 +144,20 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     dossiersMedicaux = cur.fetchall()
     for dossier in dossiersMedicaux :
         afficherDossierMedical(dossier, cur)
+        
+def ajouterClient(cur) : 
+    nom = input("Entrer le nom du client : ")
+    prenom = input("Entrer le prénom du client : ")
+    dateNaissance = input("Entrer la date de naissance du client ( format YYYY-MM-DD): ")
+    adresse = input("Entrer l'adresse du client : ")
+    tel = input("Entrer le numéro de téléphone du client : ")
+    #On tente d'insérer le client : 
+    succes = cur.execute('''
+                INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) 
+                VALUES (NULL, %s, %s, %s, %s, %s) RETURNING idClient''',
+                (nom, prenom, dateNaissance, adresse, tel))
+    if (succes == None) :
+        print("Echec de l'insertion, le client semble déjà exister")
+    else : 
+        print("Client ajouté avec succès.")
+        
