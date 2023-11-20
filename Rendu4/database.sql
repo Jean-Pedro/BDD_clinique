@@ -1,18 +1,19 @@
-CREATE TABLE User
+
+CREATE TABLE Users
 (
     idUser INTEGER PRIMARY KEY,
     login CHAR(6) NOT NULL,
     motDePasse VARCHAR(30) NOT NULL,
     type VARCHAR(15),
     CHECK (type IN ('veterinaire', 'assistant', 'client'))
-)
+);
 
 CREATE TABLE Admin
 (
     idAdmin INTEGER PRIMARY KEY,
     login CHAR(6) NOT NULL,
     motDePasse VARCHAR(30) NOT NULL
-)
+);
 
 CREATE TABLE Medicament (
     nomMol VARCHAR(100) PRIMARY KEY,
@@ -28,7 +29,7 @@ CREATE TABLE ResultatAnalyse (
 );
 
 CREATE TABLE Client (
-    idClient INTEGER PRIMARY KEY REFERENCES User(idUser),
+    idClient INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     dateNaissance DATE NOT NULL,
@@ -45,7 +46,7 @@ CREATE TABLE Espece(
 );
 
 CREATE TABLE Assistant (
-    idAssist INTEGER PRIMARY KEY REFERENCES User(idUser),
+    idAssist INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     dateNaissance DATE NOT NULL,
@@ -65,7 +66,7 @@ CREATE TABLE Animal (
 );
 
 CREATE TABLE Veterinaire (
-    idVet INTEGER PRIMARY KEY REFERENCES User(idUser),
+    idVet INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     dateNaissance DATE NOT NULL,
