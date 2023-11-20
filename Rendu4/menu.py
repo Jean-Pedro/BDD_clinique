@@ -1,22 +1,20 @@
 import psycopg2
 from fonctions import *
-try:
-    conn = psycopg2.connect(
-          user = "nf18a068",
-          password = "Lm0mhSY50v",
-          host = "tuxa.sme.utc",
-          database = "dbnf18a068"
-    )
-    cur = conn.cursor()
-    print(type(cur))
-except (Exception, psycopg2.Error) as error :
-    print ("Erreur lors de la connexion à PostgreSQL", error)
+
+conn = psycopg2.connect(
+      user = "nf18a076",
+      password = "mNMP233psq6K",
+      host = "tuxa.sme.utc",
+      database = "dbnf18a076"
+)
+cur = conn.cursor()
+print(type(cur))
 
 
 
 choixModeConnexion = -1
 succesConnexionAdministrateur = False
-while (choixModeConnexion != 0) :
+while (choixModeConnexion != 0 and choixModeConnexion != 1 and choixModeConnexion != 2) :
     print(
     '''------Menu Connexion------\n
     0 : Quitter\n
@@ -57,18 +55,17 @@ if (typeUtilisateur == "veterinaire"):
         '''------Menu Vétérinaire------\n
         0 : Quitter\n
         1 : Consulter les infos d'un animal\n
-        2 : Créer un dossier médical
         3 : Ajouter un client\n''')
         choixVet = int(input("Votre choix ? : "))
         if (choixVet == 0) :
             exit()
         elif (choixVet == 1) :
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
-        elif (choixVet == 2) :
-            creerDossierMedical(cur) #pas encore fait
-        elif (choixVet == 3) : 
+        #elif (choixVet == 2) :
+            #creerDossierMedical(cur) #pas encore fait
+        elif (choixVet == 3) :
             ajouterClient(cur)
-    
+
     #creer dossier medicaux
     #acceder aux données des patients, clients
 
