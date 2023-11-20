@@ -139,7 +139,7 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     print(f"Dossiers médicaux de {animalChoisi[1]}: ")
     cur.execute('''SELECT dm.* FROM DossierMedical dm
     JOIN Animal a ON dm.animal = a.idAnimal
-    WHERE a.idAnimal = %d
+    WHERE a.idAnimal = %s
     ORDER BY saisie DESC''',(animalChoisi[0],))
     dossiersMedicaux = cur.fetchall()
     for dossier in dossiersMedicaux :
