@@ -21,3 +21,5 @@ def affichageSelect(colonnes:tuple, result:tuple):
         for i in range(len(result[j])):
             print(f" {str(result[j][i]):{len_colonnes[i]}s} |" ,end="")
         print("\n")
+        
+def ajouterDossierMedical()
