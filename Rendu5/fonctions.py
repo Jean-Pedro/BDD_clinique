@@ -152,7 +152,7 @@ def ajouterClient(cur) :
     password = input("Entrer le mot de passe du client")
     succes = cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
-                VALUES (NULL, %s, %s, 'client') RETURNING idClient''',
+                VALUES (NULL, %s, %s, 'client') RETURNING idUser''',
                 (username, password))
     if succes == None :
         return
