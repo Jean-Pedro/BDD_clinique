@@ -2,6 +2,12 @@
 
 import psycopg2
 
+def id_suivant(cur, table:str):
+    cur.execute("(SELECT MAX(idUser) FROM %s)", (table,))
+    last_id = cur.fetchone()
+    if last_id == None:
+        return 1
+    return last_id[0]+1
 
 def affichageSelect(colonnes:tuple, result:tuple):
 
@@ -152,8 +158,8 @@ def ajouterClient(cur) :
     password = input("Entrer le mot de passe du client : ")
     succes = cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
-                VALUES (NULL, %s, %s, 'client') RETURNING idUser''',
-                (username, password))
+                VALUES (%s, %s, %s, 'client') RETURNING idUser''',
+                (id_suivant(cur, "Users"), username, password))
     if succes == None :
         return
     print(f"Création avec succès du compte client, id : {succes}" )
@@ -166,8 +172,8 @@ def ajouterClient(cur) :
     #On tente d'insérer le client :
     succes = cur.execute('''
                 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel)
-                VALUES (NULL, %s, %s, %s, %s, %s) RETURNING idClient''',
-                (nom, prenom, dateNaissance, adresse, tel))
+                VALUES (%s, %s, %s, %s, %s, %s) RETURNING idClient''',
+                (id_suivant(cur, "Client"), nom, prenom, dateNaissance, adresse, tel))
     if (succes == None) :
         print("Echec de l'insertion, le client semble déjà exister")
     else :
