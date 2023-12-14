@@ -147,9 +147,9 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
         afficherDossierMedical(dossier, cur)
 
 def ajouterClient(cur) :
-    print("Il faut créer un compte pour le client")
-    username = input("Entrer le nom d'utilisateur du client")
-    password = input("Entrer le mot de passe du client")
+    print("Il faut créer un compte pour le client.")
+    username = input("Entrer le nom d'utilisateur du client : ")
+    password = input("Entrer le mot de passe du client : ")
     succes = cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
                 VALUES (NULL, %s, %s, 'client') RETURNING idUser''',
@@ -162,6 +162,7 @@ def ajouterClient(cur) :
     dateNaissance = input("Entrer la date de naissance du client ( format YYYY-MM-DD): ")
     adresse = input("Entrer l'adresse du client : ")
     tel = input("Entrer le numéro de téléphone du client : ")
+    
     #On tente d'insérer le client :
     succes = cur.execute('''
                 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel)
