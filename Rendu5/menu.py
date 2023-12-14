@@ -8,7 +8,6 @@ conn = psycopg2.connect(
       database = "dbnf18a076"
 )
 cur = conn.cursor()
-print(type(cur))
 
 
 
@@ -64,7 +63,7 @@ if (typeUtilisateur == "veterinaire"):
         #elif (choixVet == 2) :
             #creerDossierMedical(cur, idUtilisateur, typeUtilisateur) #pas encore fait
         elif (choixVet == 3) :
-            ajouterClient(cur)
+            ajouterClient(cur, conn)
 
     #creer dossier medicaux
     #acceder aux données des patients, clients
@@ -78,6 +77,34 @@ if (typeUtilisateur == "assistant"):
 #Mode Administrateur
 if (succesConnexionAdministrateur) :
     print("Connexion Administrateur réussie.")
+    choixAdmin = -1
+    while(choixAdmin != print(type(cur))):
+        print(
+        '''------Menu Vétérinaire------\n
+        0 : Quitter\n
+        // Penser à Supprimer les comptes utilisateurs
+        1 : Creer un client\n
+        2 : Mettre a jour un client\n
+        3 : Supprimer un client\n
+        4 : Creer un veterinaire\n
+        5 : Mettre a jour un veterinaire\n
+        6 : Supprimer un veterinaire\n
+        7 : Creer un assistant\n
+        8 : Mettre a jour un assistant\n
+        9 : Supprimer un assistant\n
+        // jusque là
+        10 : Ajouter un animal\n
+        11 : Mettre a jour un animal''')
+        choixVet = int(input("Votre choix ? : "))
+        if (choixVet == 0) :
+            exit()
+        elif (choixAdmin == 1) :
+            ajouterClient(cur, conn)
+        elif (choixVet == 2) :
+            mettreAJourClient(cur)
+        elif (choixVet == 3) :
+            pass
+
 
 
 

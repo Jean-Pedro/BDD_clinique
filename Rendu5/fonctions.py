@@ -3,7 +3,7 @@
 import psycopg2
 
 def id_suivant(cur, table:str):
-    cur.execute("(SELECT MAX(idUser) FROM %s)", (table,))
+    cur.execute("(SELECT MAX(idUser) FROM "+ table +")")
     last_id = cur.fetchone()
     if last_id == None:
         return 1
@@ -104,7 +104,7 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
             colonnes  = ("idAnimal", "nom", "numPuceId", "numPasseport", "taille", "type espece", "intitulé précis")
             affichageSelect(colonnes, animaux)
             numAnimalChoisi = int(input("Entrez le numéro de la ligne de l'animal choisi :"))
-            animalChoisi=animaux[numAnimalChoisi]
+            animalChoisi=animaux[numAidnimalChoisi]
 
 
     #Affichage Personnel
@@ -152,29 +152,41 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     for dossier in dossiersMedicaux :
         afficherDossierMedical(dossier, cur)
 
-def ajouterClient(cur) :
-    print("Il faut créer un compte pour le client.")
-    username = input("Entrer le nom d'utilisateur du client : ")
-    password = input("Entrer le mot de passe du client : ")
+def ajouterClient(cur, conn) :
+    print("Il faut créer un compte pour le client")
+    username = input("Entrer le nom d'utilisateur du client")
+    password = input("Entrer le mot de passe du client")
+    id_user = id_suivant(cur, "Users")
+    print((id_suivant(cur, "Users"), username, password))
+    #succes = cur.execute('''
+#                INSERT INTO Users (idUser, login, motDePasse, type)
+#                VALUES (%s, %s, %s, 'client') RETURNING idUser''',
+#                (id_suivant(cur, "Users"), username, password))
     succes = cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
-                VALUES (%s, %s, %s, 'client') RETURNING idUser''',
-                (id_suivant(cur, "Users"), username, password))
-    if succes == None :
-        return
-    print(f"Création avec succès du compte client, id : {succes}" )
+                VALUES (%s, %s, %s, 'client')''',
+                (id_user, username, password))
+#    if succes == None :
+#        print("Attention, erreur lors de l'insertion !")
+#        return
+    print(f"Création avec succès du compte client, id : {id_user}" )
     nom = input("Entrer le nom du client : ")
     prenom = input("Entrer le prénom du client : ")
     dateNaissance = input("Entrer la date de naissance du client ( format YYYY-MM-DD): ")
     adresse = input("Entrer l'adresse du client : ")
     tel = input("Entrer le numéro de téléphone du client : ")
-    
     #On tente d'insérer le client :
     succes = cur.execute('''
                 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel)
-                VALUES (%s, %s, %s, %s, %s, %s) RETURNING idClient''',
-                (id_suivant(cur, "Client"), nom, prenom, dateNaissance, adresse, tel))
-    if (succes == None) :
-        print("Echec de l'insertion, le client semble déjà exister")
-    else :
-        print("Client ajouté avec succès.")
+                VALUES (%s, %s, %s, %s, %s, %s)''',
+                (id_user, nom, prenom, dateNaissance, adresse, tel))
+#    if (succes == None) :
+#        print("Echec de l'insertion, le client semble déjà exister")
+#    else :
+#        print("Client ajouté avec succès.")
+    conn.commit()
+
+
+def mettreAJourClient(cur) :
+    print("Choisissez votre client parmi la liste ci-dessous : \n")
+    #succes = cur.execute ("select * from ")
