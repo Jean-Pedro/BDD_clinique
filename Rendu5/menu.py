@@ -80,7 +80,7 @@ if (succesConnexionAdministrateur) :
     choixAdmin = -1
     while(choixAdmin != print(type(cur))):
         print(
-        '''------Menu Vétérinaire------\n
+        '''------Menu Administrateur------\n
         0 : Quitter\n
         // Penser à Supprimer les comptes utilisateurs
         1 : Creer un client\n
@@ -100,10 +100,10 @@ if (succesConnexionAdministrateur) :
             exit()
         elif (choixAdmin == 1) :
             ajouterClient(cur, conn)
-        elif (choixVet == 2) :
-            mettreAJourClient(cur)
-        elif (choixVet == 3) :
-            pass
+        # elif (choixVet == 2) :
+            # mettreAJourClient(cur)
+        # elif (choixVet == 3) :
+        #     pass
 
 
 
