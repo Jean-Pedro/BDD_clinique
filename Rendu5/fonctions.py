@@ -7,7 +7,7 @@ def id_suivant(cur, table:str):
     last_id = cur.fetchone()
     if last_id == None:
         return 1
-    return last_id+1
+    return last_id[0]+1
 
 def affichageSelect(colonnes:tuple, result:tuple):
 
