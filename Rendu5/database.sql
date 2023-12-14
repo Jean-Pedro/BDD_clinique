@@ -86,7 +86,6 @@ CREATE TABLE DossierMedical (
     saisie DATE NOT NULL,
     animal INTEGER REFERENCES Animal(idAnimal) NOT NULL,
     veterinairePrescripteur INTEGER REFERENCES Veterinaire(idVet) NOT NULL,
-    faitParVet BOOLEAN NOT NULL,
     CHECK (mesureTaille IS NOT NULL OR mesurePoids IS NOT NULL)
 );
 
@@ -243,11 +242,11 @@ INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specia
 
 -- DossierMédical
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, faitParVet) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10, 1);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10;
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, faitParVet) VALUES (2, 100, 50, '2004-12-04', 30, 'Blessure à la tête', 'Guérir la tête', '2004-12-03', 2, 10, 1);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (2, 100, 50, '2004-12-04', 30, 'Blessure à la tête', 'Guérir la tête', '2004-12-03', 2, 10);
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, faitParVet) VALUES (3, 100, 50, '2013-01-04', 10, 'Puce', 'Appliquer le produit anti-puce', '2013-12-03', 3, 12, 0);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (3, 100, 50, '2013-01-04', 10, 'Puce', 'Appliquer le produit anti-puce', '2013-12-03', 3, 12);
 
 
 
