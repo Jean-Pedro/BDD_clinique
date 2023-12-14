@@ -37,8 +37,8 @@ if (typeUtilisateur == "client"):
     while(choixClient != 0):
         print(
         '''------Menu Client------\n
-        0 : Quitter\n
-        1 : Consulter les infos de mon animal\n''')
+        0. Quitter\n
+        1. Consulter les infos de mon animal\n''')
         choixClient = int(input("Votre choix ? : "))
         if (choixClient == 0) :
             exit()
@@ -52,9 +52,10 @@ if (typeUtilisateur == "veterinaire"):
     while(choixVet != 0):
         print(
         '''------Menu Vétérinaire------\n
-        0 : Quitter\n
-        1 : Consulter les infos d'un animal\n
-        3 : Ajouter un client\n''')
+        0. Quitter\n
+        1. Consulter les infos d'un animal\n
+        3. Ajouter un client\n
+        4. Ajouter un animal''')
         choixVet = int(input("Votre choix ? : "))
         if (choixVet == 0) :
             exit()
@@ -64,6 +65,8 @@ if (typeUtilisateur == "veterinaire"):
             #creerDossierMedical(cur, idUtilisateur, typeUtilisateur) #pas encore fait
         elif (choixVet == 3) :
             ajouterClient(cur, conn)
+        elif (choixVet == 4) : 
+            ajouterAnimal(cur, conn)
 
     #creer dossier medicaux
     #acceder aux données des patients, clients

@@ -213,3 +213,78 @@ def statistiques_medicament(cur) :
         print("echec de la requête pour les statistiques des médicaments")
     colonnes = ("Nom médicament", "Quantité totale consommée")
     affichageSelect(colonnes, res)
+    
+    
+def ajouterAnimal(cur, conn):
+    idAnimal = id_suivant(cur, "Animal")
+    nomAnimal = input("Entrez le nom de l'animal : ")
+    numPuceId = input("Entrez le numéro de puce de l'animal (opt. entrez 'non' pour ne pas spécifier)")
+    if (numPuceId == "non") :
+        numPuceId = "NULL"
+    numPasseport = input("Entrez le numéro de passport de l'animal (opt. entrez 'non' pour ne pas spécifier)")
+    if (numPasseport == "non") :
+        numPasseport = "NULL"
+    listeTailles = ["petite","moyenne","autre"]
+    choixTaille = -1
+    print('''Tailles possibles de l'animal :\n
+          0. petite\n
+          1. moyenne\n
+          2. autre''')
+    while(choixTaille <0 and choixTaille>2):
+        choixTaille = int(input("Votre choix ? (0,1,2)"))
+        if (choixTaille <0 and choixTaille>2) :
+            print("choix incorrect, reessayez.")
+    tailleAnimal = listeTailles[choixTaille]
+    #gestion des espèces : on affiche celles qui existent déjà, si l'animal n'appartient à aucune d'elles, on propose à l'utilisateur de créer une nouvelle espèce
+    cur.execute('''SELECT * FROM Espece''')
+    res = cur.fetchall()
+    nombreEspecesTotal = len(res)
+    colonnesEspeces = ["idEspece", "typeEspece", "intitulePrecis"]
+    affichageSelect(colonnesEspeces, res)
+    estDedans= ""
+    idEspeceChoisie = -1
+    while(estDedans != "oui" and estDedans!= "non") :
+        estDedans = input("L'epsece de votre animal apparaît-elle dans la liste ? (oui | non)")
+    if (estDedans == "oui") :
+        idEspeceChoisie = int(input("Entrez l'id de l'espèce de votre animal"))
+        while (idEspeceChoisie < 0 or idEspeceChoisie > nombreEspecesTotal) :
+            print("id choisi incorrect, réessayez.")
+            idEspeceChoisie = int(input("Entrez l'id de l'espèce de votre animal"))
+    else :
+        #On doit créer une nouvelle espèce
+        idEspeceChoisie = ajouterEspece(cur, conn)
+    #À ce stade, on connaît l'id de l'espèce choisie, on peut donc insérer l'animal dans la table Animal
+    try : 
+        cur.execute('''INSERT INTO Animal VALUES (%s, %s, %s, %s, %s, %s) ''',
+                    (idAnimal, nomAnimal, numPuceId, numPasseport, tailleAnimal, idEspeceChoisie))
+        print(f"Insertion de l'animal {nomAnimal} avec succès.")
+    except psycopg2.errors :
+        print("Attention ! Erreur lors de l'insertion de l'animal.")
+        return
+
+def ajouterEspece(cur, conn) :
+    idEspece = id_suivant(cur, "Espece")
+    typesEspeces = ["félin", "canidé", "reptile", "rongeur", "oiseau", "autre"]
+    print('''Voici les types d'especes possibles :\n
+          0. félin\n
+          1. canidé\n
+          2. reptile\n
+          3. rongeur\n
+          4. oiseau\n
+          5. autre''')
+    choixType=  int(input("Votre choix ? (0...5) :"))
+    while (choixType < 0 or choixType > 5) :
+        print("Saisie incorrecte. Réessayez")
+        choixType=  int(input("Votre choix ? (0...5) :"))
+    typeEspece = typesEspeces[choixType]
+    intitulePrecisEspece = input("Entrez l'intitulé précis de l'espèce : ")
+    try : 
+        cur.execute('''INSERT INTO Espece VALUES (%s, %s, %s)''',
+                    (idEspece, typeEspece, intitulePrecisEspece))
+    except psycopg2.errors :
+        print("Attention ! Erreur lors de l'insertion de l'espèce.")
+        return
+    conn.commit()
+    print(f"Espèce d'id {idEspece} insérée avec succes")
+    #On retourne l'id de l'espèce nouvellement insérée
+    return idEspece
