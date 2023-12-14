@@ -178,15 +178,30 @@ def ajouterClient(cur, conn) :
     #On tente d'insérer le client :
     succes = cur.execute('''
                 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel)
-                VALUES (%s, %s, %s, %s, %s, %s)''',
-                (id_user, nom, prenom, dateNaissance, adresse, tel))
-#    if (succes == None) :
-#        print("Echec de l'insertion, le client semble déjà exister")
-#    else :
-#        print("Client ajouté avec succès.")
-    conn.commit()
+                VALUES (%s, %s, %s, %s, %s, %s) RETURNING idClient''',
+                (id_suivant(cur, "Client"), nom, prenom, dateNaissance, adresse, tel))
+    if (succes == None) :
+        print("Echec de l'insertion, le client semble déjà exister")
+    else :
+        print("Client ajouté avec succès.")
 
 
-def mettreAJourClient(cur) :
-    print("Choisissez votre client parmi la liste ci-dessous : \n")
-    #succes = cur.execute ("select * from ")
+def statistiques_clinique(cur) :
+    #On veut un affichage du nombre de clients, d'animaux, de vétérinaires et d'assistants enregistrés dans la base de données.
+    cur.execute('''SELECT COUNT(*) FROM Client''')
+    nbClients = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Animal''')
+    nbAnimaux = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Veterinaire''')
+    nbVeterinaires = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Assistant''')
+    nbAssistants = cur.fetchone()
+    print(f''' La base de donnée contient exactement :\n
+          - {nbClients} Clients\n
+          - {nbAnimaux} Animaux\n
+          - {nbVeterinaires} Vétérinaires\n
+          - {nbAssistants} Assistants\n
+    ''')
+    
+def statistiques_medicament(cur) :
+    pass
