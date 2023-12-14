@@ -62,7 +62,7 @@ if (typeUtilisateur == "veterinaire"):
         elif (choixVet == 1) :
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
         #elif (choixVet == 2) :
-            #creerDossierMedical(cur) #pas encore fait
+            #creerDossierMedical(cur, idUtilisateur, typeUtilisateur) #pas encore fait
         elif (choixVet == 3) :
             ajouterClient(cur)
 
