@@ -172,3 +172,24 @@ def ajouterClient(cur) :
         print("Echec de l'insertion, le client semble déjà exister")
     else :
         print("Client ajouté avec succès.")
+
+
+def statistiques_clinique(cur) :
+    #On veut un affichage du nombre de clients, d'animaux, de vétérinaires et d'assistants enregistrés dans la base de données.
+    cur.execute('''SELECT COUNT(*) FROM Client''')
+    nbClients = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Animal''')
+    nbAnimaux = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Veterinaire''')
+    nbVeterinaires = cur.fetchone()
+    cur.execute('''SELECT COUNT(*) FROM Assistant''')
+    nbAssistants = cur.fetchone()
+    print(f''' La base de donnée contient exactement :\n
+          - {nbClients} Clients\n
+          - {nbAnimaux} Animaux\n
+          - {nbVeterinaires} Vétérinaires\n
+          - {nbAssistants} Assistants\n
+    ''')
+    
+def statistiques_medicament(cur) :
+    pass
