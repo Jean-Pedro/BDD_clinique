@@ -198,4 +198,11 @@ def statistiques_clinique(cur) :
     ''')
     
 def statistiques_medicament(cur) :
-    pass
+    #On veut récupérer pour chaque médicament, le nombre de médicaments consommés (medic.quantiteMedicamentJour * dm.dureeTraitement)
+    #On utilise pour cela une vue : quantiteMedicamentConsommee
+    cur.execute('''SELECT * FROM quantiteMedicamentConsommee''')
+    res = cur.fetchall()
+    if (not res) :
+        print("echec de la requête pour les statistiques des médicaments")
+    colonnes = ("Nom médicament", "Quantité totale consommée")
+    affichageSelect(colonnes, res)
