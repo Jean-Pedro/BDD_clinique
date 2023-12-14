@@ -78,33 +78,73 @@ if (typeUtilisateur == "assistant"):
 if (succesConnexionAdministrateur) :
     print("Connexion Administrateur réussie.")
     choixAdmin = -1
-    while(choixAdmin != print(type(cur))):
+    while(choixAdmin != 0):
         print(
         '''------Menu Administrateur------\n
-        0 : Quitter\n
-        // Penser à Supprimer les comptes utilisateurs
-        1 : Creer un client\n
-        2 : Mettre a jour un client\n
-        3 : Supprimer un client\n
-        4 : Creer un veterinaire\n
-        5 : Mettre a jour un veterinaire\n
-        6 : Supprimer un veterinaire\n
-        7 : Creer un assistant\n
-        8 : Mettre a jour un assistant\n
-        9 : Supprimer un assistant\n
-        // jusque là
-        10 : Ajouter un animal\n
-        11 : Mettre a jour un animal''')
-        choixVet = int(input("Votre choix ? : "))
-        if (choixVet == 0) :
+        0. Quitter\n
+        1. Modifier la base de donnée\n
+        2. Voir des statistiques sur la clinique
+        ''')
+        choixAdmin = int(input("Votre choix ? : "))
+        if (choixAdmin == 0) :
             exit()
         elif (choixAdmin == 1) :
-            ajouterClient(cur, conn)
-        # elif (choixVet == 2) :
-            # mettreAJourClient(cur)
-        # elif (choixVet == 3) :
-        #     pass
-
+            choixModif = -1
+            while (choixModif != 0) :
+                print('''------Menu Modification BDD------\n
+                    0. Revenir au menu précédent
+                    1. Creer un client\n
+                    2. Mettre a jour un client\n
+                    3. Supprimer un client\n
+                    4. Creer un veterinaire\n
+                    5. Mettre a jour un veterinaire\n
+                    6. Supprimer un veterinaire\n
+                    7. Creer un assistant\n
+                    8. Mettre a jour un assistant\n
+                    9. Supprimer un assistant\n''')
+                choixModif= int(input("Votre choix ? : "))
+            if (choixModif == 0) :
+                choixAdmin = -1
+                #la boucle while sur choixAdmin tourne donc à nouveau
+            elif (choixModif == 1) :
+                ajouterClient(cur, conn)
+            elif (choixModif == 2) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 3) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 4) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 5) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 6) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 7) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 8) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixModif == 9) :
+                pass #à remplacer par l'appel à la bonne méthode
+        elif (choixAdmin == 2) :
+            choixStats = -1
+            print('''------Menu Statistiques------\n
+                  0. Revenir au menu précédent\n
+                  1. Statistiques générales sur la base de données\n
+                  2. Voir les médicaments consommés\n
+                  3. Voir un rapport d'activité d'un vétérinaire\n
+                  4. Voir un rapport d'activité d'un assistant\n
+                  ''')
+            choixStats = int(input("Votre choix ? : "))
+            if (choixStats == 0) :
+                choixAdmin = -1
+                #la boucle while sur choixAdmin tourne donc à nouveau
+            elif (choixStats == 1) :
+                statistiques_clinique(cur)
+            elif (choixStats == 2) :
+                statistiques_medicament(cur)
+            elif (choixStats == 3) :
+                pass #à remplacer par l'appel à la bonne méthode
+            elif (choixStats == 4) :
+                pass #à remplacer par l'appel à la bonne méthode
 
 
 
