@@ -23,12 +23,12 @@ def affichageSelect(colonnes:tuple, result:tuple):
 def afficherDossierMedical(dossier, cur):
     #On récupère le nom de l'animal associé au Dossier
     cur.execute('''SELECT nom FROM Animal
-    WHERE Animal.idAnimal = %d''', (dossier[9],))
+    WHERE Animal.idAnimal = %s''', (dossier[9],))
     nomAnimal = cur.fetchone()
 
     #il faut trouver le vétérinaire prescripteur pour l'afficher
     cur.execute('''SELECT nom FROM Veterinaire V
-                WHERE V.idVet = %d''', (dossier[8],))
+                WHERE V.idVet = %s''', (dossier[8],))
     nomVet = cur.fetchone()
 
     print(f'''
