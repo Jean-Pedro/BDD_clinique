@@ -23,12 +23,12 @@ def affichageSelect(colonnes:tuple, result:tuple):
 def afficherDossierMedical(dossier, cur):
     #On récupère le nom de l'animal associé au Dossier
     cur.execute('''SELECT nom FROM Animal
-    WHERE Animal.idAnimal = %d''', (dossier[9],))
+    WHERE Animal.idAnimal = %s''', (dossier[9],))
     nomAnimal = cur.fetchone()
 
     #il faut trouver le vétérinaire prescripteur pour l'afficher
     cur.execute('''SELECT nom FROM Veterinaire V
-                WHERE V.idVet = %d''', (dossier[8],))
+                WHERE V.idVet = %s''', (dossier[8],))
     nomVet = cur.fetchone()
 
     print(f'''
@@ -60,7 +60,8 @@ def connexionUtilisateur(cur) :
         (username, password)
         )
         res = cur.fetchone()
-        succes = (res[1] in ["client","veterinaire","assistant"])
+        if (res) :
+            succes = True
     return res
 
 def connexionAdministrateur(cur) :
@@ -139,7 +140,7 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     print(f"Dossiers médicaux de {animalChoisi[1]}: ")
     cur.execute('''SELECT dm.* FROM DossierMedical dm
     JOIN Animal a ON dm.animal = a.idAnimal
-    WHERE a.idAnimal = %d
+    WHERE a.idAnimal = %s
     ORDER BY saisie DESC''',(animalChoisi[0],))
     dossiersMedicaux = cur.fetchall()
     for dossier in dossiersMedicaux :
@@ -151,7 +152,7 @@ def ajouterClient(cur) :
     password = input("Entrer le mot de passe du client")
     succes = cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
-                VALUES (NULL, %s, %s, 'client') RETURNING idClient''',
+                VALUES (NULL, %s, %s, 'client') RETURNING idUser''',
                 (username, password))
     if succes == None :
         return
