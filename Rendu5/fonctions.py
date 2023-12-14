@@ -132,7 +132,7 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
                 affichageSelect(colonnes, animaux)
                 numAnimalChoisi = int(input("Entrez le numéro de la ligne de l'animal choisi :"))
                 animalChoisi=animaux[numAnimalChoisi]
-        else :
+        elif choixTypeRecherche == 2:
             #On demande l'id de l'animal
             idAnimal = int(input("Entrez l'id de l'animal : "))
             cur.execute('''SELECT A.id, A.nom, A.numPuceId, A.numPasseport, A.taille, E.typeEspece, E.intitulePrecis
@@ -244,7 +244,7 @@ def ajouterAnimal(cur, conn):
     estDedans= ""
     idEspeceChoisie = -1
     while(estDedans != "oui" and estDedans!= "non") :
-        estDedans = input("L'epsece de votre animal apparaît-elle dans la liste ? (oui | non)")
+        estDedans = input("L'espèce de votre animal apparaît-elle dans la liste ? (oui | non)")
     if (estDedans == "oui") :
         idEspeceChoisie = int(input("Entrez l'id de l'espèce de votre animal"))
         while (idEspeceChoisie < 0 or idEspeceChoisie > nombreEspecesTotal) :
@@ -261,6 +261,94 @@ def ajouterAnimal(cur, conn):
     except psycopg2.errors :
         print("Attention ! Erreur lors de l'insertion de l'animal.")
         return
+
+def modifierAnimal(cur, conn):
+    #On veut proposer à l'utilisateur de rechercher un animal par nom ou par id, puis lui proposer de le modifier
+    choixTypeRecherche = 0
+    while(choixTypeRecherche != 1 and choixTypeRecherche != 2):
+        choixTypeRecherche = int(input("Rechercher un animal par :\n1) Nom\n2) Id\n"))
+        if (choixTypeRecherche == 1):
+            #On demande le nom de l'animal
+            nomAnimal = input("Entrez le nom de l'animal : ")
+            cur.execute('''SELECT A.idAnimal, A.nom, A.numPuceId, A.numPasseport, A.taille, E.typeEspece, E.intitulePrecis
+            FROM Animal A
+            JOIN Espece E ON A.espece = E.idEspece
+            WHERE A.nom = %s''', (nomAnimal,))
+            animaux = cur.fetchall()
+            if (len(animaux) == 0) :
+                print("Aucun animal ne correspond à ce nom")
+                return
+            if (len(animaux) == 1) :
+                animalChoisi = animaux[0]
+            else :
+                #Si Plusieurs animaux ont le même nom, on demande au personnel de choisir
+                colonnes  = ("idAnimal", "nom", "numPuceId", "numPasseport", "taille", "type espèce", "intitulé précis")
+                affichageSelect(colonnes, animaux)
+                numAnimalChoisi = int(input("Entrez le numéro de la ligne de l'animal choisi :"))
+                animalChoisi=animaux[numAnimalChoisi]
+        elif choixTypeRecherche == 2:
+            #On demande l'id de l'animal
+            idAnimal = int(input("Entrez l'id de l'animal : "))
+            cur.execute('''SELECT A.id, A.nom, A.numPuceId, A.numPasseport, A.taille, E.typeEspece, E.intitulePrecis
+            FROM Animal A
+            JOIN Espece E ON A.espece = E.idEspece
+            WHERE A.idAnimal = %s''', (idAnimal,))
+            animalChoisi = cur.fetchone()
+    #On connaît l'animal choisi, on l'affiche à nouveau avant de proposer de le modifier 
+    affichageSelect(("idAnimal", "nom", "numPuceId", "numPasseport", "taille", "type espèce", "intitulé précis"), animalChoisi)
+    nouveauNom = animalChoisi[1]
+    nouveauNumPuceId = animalChoisi[2]
+    nouveauNumPasseport = animalChoisi[3]
+    nouvelleTaille = animalChoisi[4]
+    #Il faut récupérer l'id de l'espèce actuelle
+    cur.execute("SELECT espece FROM Animal WHERE idAnimal = %s", (animalChoisi[0]))
+    nouvelIdEspece= cur.fetchone()[0]
+    choixModifAnimal = -1
+    while (choixModifAnimal != 0):
+        print('''\n---Menu Modification Animal---\n
+          0. Arrêter les modifications et enregistrer l'animal\n
+          1. Modifier le nom\n
+          2. Modifier le numéro de la puce\n
+          3. Modifier le numéro du passeport\n
+          4. Modifier la taille\n
+          5. Modifier le type d'espèce''')
+        choixModifAnimal = int(input("Votre choix ? : "))
+        if (choixModifAnimal == 1) :
+            nouveauNom = input("Entrez le nouveau nom de l'animal : ")
+            print(f"Le nom sera désormais : {nouveauNom}")
+        elif (choixModifAnimal == 2) : 
+            nouveauNumPuceId = int(input("Entrez le nouveau numéro de puce d'identification de l'animal : "))
+            print(f"Le numéro de puce sera désormais : {nouveauNumPuceId}")   
+        elif (choixModifAnimal == 3) : 
+            nouveauNumPasseport = int(input("Entrez le nouveau numéro de passeport de l'animal : "))
+            print(f"Le numéro de passeport sera désormais : {nouveauNumPasseport}")
+        elif (choixModifAnimal == 4) : 
+            nouvelleTaille = int(input("Entrez la nouvelle taille de l'animal : "))
+            print(f"La nouvelle taille sera désormais : {nouvelleTaille}")
+        elif (choixModifAnimal == 5) :
+            #Ce cas est plus complexe, il faut vérifier que l'espèce que l'utilisateur veut existe déjà, et si ce n'est pas le cas, il faut qu'il la crée
+            cur.execute('''SELECT * FROM Espece''')
+            res = cur.fetchall()
+            nombreEspecesTotal = len(res)
+            colonnesEspeces = ["idEspece", "typeEspece", "intitulePrecis"]
+            affichageSelect(colonnesEspeces, res)
+            estDedans= ""
+            while(estDedans != "oui" and estDedans!= "non") :
+                estDedans = input("L'espèce de votre animal apparaît-elle dans la liste ? (oui | non)")
+            if (estDedans == "oui") :
+                nouvelIdEspece = int(input("Entrez l'id de l'espèce de votre animal"))
+                while (nouvelIdEspece < 0 or nouvelIdEspece > nombreEspecesTotal) :
+                    print("id choisi incorrect, réessayez.")
+                    nouvelIdEspece = int(input("Entrez l'id de l'espèce de votre animal"))
+            else :
+                #On doit créer une nouvelle espèce
+                nouvelIdEspece = ajouterEspece(cur, conn)
+    #L'utilisateur a arrêté les modifications, on peut faire la requête update
+    try :
+        cur.execute('''UPDATE Animal SET nom=%s, numPuceId=%s, numPasseport=%s, taille=%s, espece=%s WHERE idAnimal=%s''', (nouveauNom, nouveauNumPuceId, nouveauNumPasseport, nouvelleTaille, nouvelIdEspece, animalChoisi[0]))
+    except psycopg2.errors :
+        print("Attention ! Erreur lors de la modification de l'animal.")
+        return     
 
 def ajouterEspece(cur, conn) :
     idEspece = id_suivant(cur, "Espece")

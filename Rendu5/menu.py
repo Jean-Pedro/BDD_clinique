@@ -55,7 +55,8 @@ if (typeUtilisateur == "veterinaire"):
         0. Quitter\n
         1. Consulter les infos d'un animal\n
         3. Ajouter un client\n
-        4. Ajouter un animal''')
+        4. Ajouter un animal\n
+        5. Modifier un animal''')
         choixVet = int(input("Votre choix ? : "))
         if (choixVet == 0) :
             exit()
@@ -67,6 +68,8 @@ if (typeUtilisateur == "veterinaire"):
             ajouterClient(cur, conn)
         elif (choixVet == 4) : 
             ajouterAnimal(cur, conn)
+        elif (choixVet == 5) : 
+            modifierAnimal(cur, conn)
 
     #creer dossier medicaux
     #acceder aux données des patients, clients
