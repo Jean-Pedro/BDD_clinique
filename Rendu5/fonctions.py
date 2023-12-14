@@ -60,7 +60,8 @@ def connexionUtilisateur(cur) :
         (username, password)
         )
         res = cur.fetchone()
-        succes = (res[1] in ["client","veterinaire","assistant"])
+        if (res) :
+            succes = True
     return res
 
 def connexionAdministrateur(cur) :
