@@ -502,20 +502,28 @@ def ajouterEspece(cur, conn) :
 def creerDossierMedical(cur, conn):
     idDossier = id_suivant(cur, "DossierMedical", "idDossier")
     
-    tailleAnimal = int(input("Entrez la taille mesurée de l'animal (opt. entrez 'non' pour ne pas spécifier) : "))
+    tailleAnimal = input("Entrez la taille mesurée de l'animal (opt. entrez 'non' pour ne pas spécifier) : ")
     if (tailleAnimal == "non") :
         tailleAnimal = None
-    poidsAnimal = int(input("Entrez le poids mesuré de l'animal (opt. entrez 'non' pour ne pas spécifier) : "))
+    else:
+        tailleAnimal = int(tailleAnimal)
+    poidsAnimal = input("Entrez le poids mesuré de l'animal (opt. entrez 'non' pour ne pas spécifier) : ")
     if (poidsAnimal == "non") :
         poidsAnimal = None
+    else:
+        poidsAnimal = int(poidsAnimal)
     while ((tailleAnimal == None) and (poidsAnimal == None)):
         print("La taille et le poids ne peuvent être tous les deux nuls !")
-        tailleAnimal = int(input("Entrez la taille mesurée de l'animal (opt. entrez 'non' pour ne pas spécifier) : "))
+        tailleAnimal = input("Entrez la taille mesurée de l'animal (opt. entrez 'non' pour ne pas spécifier) : ")
         if (tailleAnimal == "non") :
             tailleAnimal = None
-        poidsAnimal = int(input("Entrez le poids mesuré de l'animal (opt. entrez 'non' pour ne pas spécifier) : "))
+        else:
+            tailleAnimal = int(tailleAnimal)
+        poidsAnimal = input("Entrez le poids mesuré de l'animal (opt. entrez 'non' pour ne pas spécifier) : ")
         if (poidsAnimal == "non") :
             poidsAnimal = None
+        else:
+            poidsAnimal = int(poidsAnimal)
     
     debutTraitement = input("Entrez la date de début du traitement prescrit (aaaa-mm-jj) : ")
     dureeTraitement = int(input("Entrez la durée du traitement prescrit : "))
@@ -524,24 +532,26 @@ def creerDossierMedical(cur, conn):
     dateSaisie = str(datetime.date.today())
     
     #Gestion de l'animal traité : on affiche ceux qui existent
-    cur.execute('''SELECT idAnimal, nom, espece, numPuceId, numPasseport FROM Animal''')
+    cur.execute('''SELECT idAnimal, nom, numPuceId, numPasseport FROM Animal''')
     res = cur.fetchall()
     nombreAnimauxTotal = len(res)
-    affichageSelect(("id", "Nom", "Espece", "Numéro de puce", "Numéro de passeport"), res)
-    idAnimalChoisi = int(input("Entrez l'id de l'animal traité : "))
-    while (idAnimalChoisi < 0 or idAnimalChoisi > nombreAnimauxTotal) :
-        print("id choisi incorrect, réessayez.")
-        idAnimalChoisi = int(input("Entrez l'id de l'animal traité : "))
+    affichageSelect(("id", "Nom", "Numéro de puce", "Numéro de passeport"), res)
+    animalChoisi = int(input("Entrez la ligne de l'animal traité : "))
+    while (animalChoisi < 0 or animalChoisi > nombreAnimauxTotal) :
+        print("Ligne choisie incorrect, réessayez.")
+        animalChoisi = int(input("Entrez la ligne de l'animal traité : "))
+    idAnimalChoisi = res[animalChoisi][0]
     
     #Gestion du vétérinaire prescripteur : on affiche ceux qui existent
     cur.execute('''SELECT idVet, nom, prenom FROM Veterinaire''')
     res = cur.fetchall()
     nombreVetoTotal = len(res)
     affichageSelect(("id", "Nom", "Prénom"), res)
-    idVetoChoisi = int(input("Entrez l'id du vétérinaire prescripteur : "))
-    while (idVetoChoisi < 0 or idVetoChoisi > nombreVetoTotal) :
-        print("id choisi incorrect, réessayez.")
-        idVetoChoisi = int(input("Entrez l'id du vétérinaire prescripteur : "))
+    vetoChoisi = int(input("Entrez la ligne du vétérinaire prescripteur : "))
+    while (vetoChoisi < 0 or vetoChoisi > nombreVetoTotal) :
+        print("Ligne choisie incorrect, réessayez.")
+        vetoChoisi = int(input("Entrez la ligne du vétérinaire prescripteur : "))
+    idVetoChoisi = res[vetoChoisi][0]
     
     #Ajout du dossier en lui-même à la base de données
     try :
@@ -557,10 +567,11 @@ def creerDossierMedical(cur, conn):
     res = cur.fetchall()
     nombreVetoTotal = len(res)
     affichageSelect(("id", "Nom", "Prénom"), res)
-    idChoisi = int(input("Entrez l'id d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
-    while (idChoisi < -1 or idChoisi > nombreVetoTotal) :
-        print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-        idChoisi = int(input("Entrez l'id d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+    choisi = int(input("Entrez la ligne d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+    while (choisi < -1 or choisi > nombreVetoTotal) :
+        print("id choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
+        choisi = int(input("Entrez la ligne d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+    idChoisi = res[choisi][0] if choisi != -1 else -1
     while (idChoisi != -1):
         #Insertion du vétérinaire choisi
         try :
@@ -571,20 +582,22 @@ def creerDossierMedical(cur, conn):
             print("Attention ! Erreur lors de l'insertion de la prise en compte du vétérinaire.")
             return
         #Nouveau vétérinaire
-        idChoisi = int(input("Entrez l'id d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
-        while (idChoisi < -1 or idChoisi > nombreVetoTotal) :
-            print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-            idChoisi = int(input("Entrez l'id d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+        choisi = int(input("Entrez la ligne d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+        while (choisi < -1 or choisi > nombreVetoTotal) :
+            print("id choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
+            choisi = int(input("Entrez la ligne d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
+        idChoisi = res[choisi][0] if choisi != -1 else -1
             
     #Gestion des assistants ayant participé : on affiche ceux qui existent
     cur.execute('''SELECT idAssist, nom, prenom FROM Assistant''')
     res = cur.fetchall()
     nombreAssistTotal = len(res)
     affichageSelect(("id", "Nom", "Prénom"), res)
-    idChoisi = int(input("Entrez l'id d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
-    while (idChoisi < -1 or idChoisi > nombreAssistTotal) :
-        print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-        idChoisi = int(input("Entrez l'id d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+    choisi = int(input("Entrez la ligne d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+    while (choisi < -1 or choisi > nombreAssistTotal) :
+        print("Ligne choisie incorrect, réessayez avec une autre ligne ou entrez -1.")
+        choisi = int(input("Entrez la ligne d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+    idChoisi = res[choisi][0] if choisi != -1 else -1
     while (idChoisi != -1):
         #Insertion de l'assistant choisi
         try :
@@ -595,36 +608,37 @@ def creerDossierMedical(cur, conn):
             print("Attention ! Erreur lors de l'insertion de la prise en compte de l'assistant.")
             return
         #Nouvel assistant
-        idChoisi = int(input("Entrez l'id d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
-        while (idChoisi < -1 or idChoisi > nombreAssistTotal) :
-            print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-            idChoisi = int(input("Entrez l'id d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+        choisi = int(input("Entrez la ligne d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+        while (choisi < -1 or choisi > nombreAssistTotal) :
+            print("id choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
+            choisi = int(input("Entrez la ligne d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
+        idChoisi = res[choisi][0] if choisi != -1 else -1
             
     #Gestion des médicaments prescrits : on affiche ceux qui existent
     cur.execute('''SELECT nomMol, description FROM Medicament''')
-    res0 = cur.fetchall()
-    nombreMedocTotal = len(res0)
-    res = ((i, res0[i][0], res0[i][1]) for  i in range(nombreMedocTotal))
-    assocIdMedoc = {i:res0[i][0] for  i in range(nombreMedocTotal)}
-    affichageSelect(("id", "Nom", "Description"), res)
-    idChoisi = int(input("Entrez l'id d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
-    while (idChoisi < -1 or idChoisi > nombreMedocTotal) :
-        print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-        idChoisi = int(input("Entrez l'id d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+    res = cur.fetchall()
+    nombreMedocTotal = len(res)
+    affichageSelect(("Nom", "Description"), res)
+    choisi = int(input("Entrez la ligne d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+    while (choisi < -1 or choisi > nombreMedocTotal) :
+        print("Ligne choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
+        choisi = int(input("Entrez la ligne d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+    idChoisi = res[choisi][0] if choisi != -1 else -1 #N'est pas à proprement parler un id mais nommé comme ça pour garder une cohérence dans le code
     while (idChoisi != -1):
         #Insertion du médicament choisi
         try :
             cur.execute('''INSERT INTO  VALUES (%s, %s) ''',
-                        (assocIdMedoc[idChoisi], idDossier))
-            print(f"Insertion du médicament {assocIdMedoc[idChoisi]} avec succès.")
+                        (idChoisi, idDossier))
+            print(f"Insertion du médicament {idChoisi} avec succès.")
         except psycopg2.errors :
             print("Attention ! Erreur lors de l'insertion du médicament prescrit.")
             return
         #Nouveau médicament
-        idChoisi = int(input("Entrez l'id d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
-        while (idChoisi < -1 or idChoisi > nombreMedocTotal) :
-            print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-            idChoisi = int(input("Entrez l'id d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+        choisi = int(input("Entrez la ligne d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+        while (choisi < -1 or choisi > nombreMedocTotal) :
+            print("Ligne choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
+            choisi = int(input("Entrez la ligne d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
+        idChoisi = res[choisi][0] if choisi != -1 else -1 #N'est pas à proprement parler un id mais nommé comme ça pour garder une cohérence dans le code
             
     #Gestion des résulats d'analyses réalisées durant la procédure : on affiche ceux qui existent déjà, si le résultat n'est pas parmi eux, on propose à l'utilisateur de le rajouter
     cur.execute('''SELECT idResultat , lien FROM ResultatAnalyse ''')
@@ -632,31 +646,34 @@ def creerDossierMedical(cur, conn):
     nombreResultTotal = len(res)
     affichageSelect(("id", "Nom", "Prénom"), res)
     idChoisi = -1
-    estDedans= ""
-    while(estDedans != "oui" and estDedans!= "non") :
-        estDedans = input("Voulez-vous ajouter un résultat d'analyse  au dossier qui apparaît dans la liste ? (oui | non)")
-    if (estDedans == "oui") :
-        idChoisi = int(input("Entrez l'id d'un résultat d'analyse s'elle a été réalisée durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
-        while (idChoisi < -1 or idChoisi > nombreResultTotal) :
-            print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-            idChoisi = int(input("Entrez l'id d'un résultat d'analyse s'elle a été réalisée durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
-    else :
-        #On doit créer un nouveau résultat d'analyse
-        idChoisi = ajouterResultatAnalyse(cur, conn)    
     while (idChoisi != -1):
-        #Insertion du résultat d'analyse choisi
-        try :
-            cur.execute('''INSERT INTO ContientResultDoss VALUES (%s, %s) ''',
-                        (idChoisi, idDossier))
-            print(f"Insertion du résultat d'analyse numéro {idChoisi} avec succès.")
-        except psycopg2.errors :
-            print("Attention ! Erreur lors de l'insertion du résultat d'analyse.")
-            return
-        #Nouveau résultat d'analyse
-        idChoisi = int(input("Entrez l'id d'un résultat d'analyse s'elle a été réalisée durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
-        while (idChoisi < -1 or idChoisi > nombreResultTotal) :
-            print("id choisi incorrect, réessayez avec un autre id ou entrez -1.")
-            idChoisi = int(input("Entrez l'id d'un résultat d'analyse s'elle a été réalisée durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
+        estPasDedans= ""
+        while(estPasDedans != "oui" and estPasDedans!= "non") :
+            estPasDedans = input("Voulez-vous ajouter au dossier un résultat d'analyse qui n'apparaît pas dans la liste ? (oui | non)")
+        if (estPasDedans == "non") :
+            choisi = int(input("Entrez la ligne d'un résultat d'analyse s'il a été réalisé durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
+            while (choisi < -1 or choisi > nombreResultTotal) :
+                print("Ligne choisie incorrect, réessayez avec une autre ligne ou entrez -1.")
+                choisi = int(input("Entrez la ligne d'un résultat d'analyse s'il a été réalisé durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
+            idChoisi = res[choisi][0] if choisi != -1 else -1
+            #Insertion du résultat d'analyse choisi
+            if(idChoisi != 1):
+                try :
+                    cur.execute('''INSERT INTO ContientResultDoss VALUES (%s, %s) ''',
+                                (idChoisi, idDossier))
+                    print(f"Insertion du résultat d'analyse numéro {idChoisi} avec succès.")
+                except psycopg2.errors :
+                    print("Attention ! Erreur lors de l'insertion du résultat d'analyse.")
+                    return
+                #Nouveau résultat d'analyse
+                choisi = int(input("Entrez la ligne d'un résultat d'analyse s'il a été réalisé durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
+                while (choisi < -1 or choisi > nombreResultTotal) :
+                    print("Ligne choisie incorrect, réessayez avec une autre ligne ou entrez -1.")
+                    choisi = int(input("Entrez la ligne d'un résultat d'analyse s'il a été réalisé durant la procédure ou entrez -1 si tous les résulats d'analyses réalisées ont été ajoutés : "))
+                idChoisi = res[choisi][0] if choisi != -1 else -1
+        else :
+            #On doit créer un nouveau résultat d'analyse
+            idChoisi = ajouterResultatAnalyse(cur, conn)    
     
     
     
