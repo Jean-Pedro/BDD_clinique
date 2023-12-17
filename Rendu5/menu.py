@@ -114,19 +114,19 @@ if (succesConnexionAdministrateur) :
                     choixAdmin = -1
                     #la boucle while sur choixAdmin tourne donc à nouveau
                 elif (choixModif == 1) :
-                    ajouterClient(cur, conn, "client")
+                    ajouterUser(cur, conn, "client")
                 elif (choixModif == 2) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 3) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 4) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    ajouterUser(cur, conn, "veterinaire")
                 elif (choixModif == 5) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 6) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 7) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    ajouterUser(cur, conn, "assistant")
                 elif (choixModif == 8) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 9) :

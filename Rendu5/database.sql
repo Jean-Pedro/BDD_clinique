@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS Users CASCADE;
 CREATE TABLE Users
 (
     idUser INTEGER PRIMARY KEY,
-    login CHAR(6) NOT NULL UNIQUE,
+    login VARCHAR(6) NOT NULL UNIQUE,
     motDePasse VARCHAR(30) NOT NULL,
     type VARCHAR(15),
     CHECK (type IN ('veterinaire', 'assistant', 'client'))
