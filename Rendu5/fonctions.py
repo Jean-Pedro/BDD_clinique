@@ -2,9 +2,9 @@
 
 import psycopg2
 
-def id_suivant(cur, table:str):
+def id_suivant(cur, table:str, id:str):
     # Cette fonctin permet de récupérer le prochain id à utiliser pour une table donnée
-    cur.execute("(SELECT MAX(idUser) FROM "+ table +")")
+    cur.execute("(SELECT MAX("+id+") FROM "+ table +")")
     last_id = cur.fetchone()
     if last_id == None:
         return 1
@@ -79,20 +79,21 @@ def connexionAdministrateur(cur) :
         username = input("Nom d'utilisateur : ")
         password = input("Mot de passe : ")
 
-        # cur.execute(
-        # "SELECT idAdmin FROM Admin WHERE login = %s AND motDePasse = %s",
-        # (username, password)
-        # )
-        #cur.execute("select idAdmin from Admin where login='admin' AND motDePasse='123'")
         cur.execute(
-        "SELECT idUser, type FROM Users WHERE login = %s AND motDePasse = %s",
+        "SELECT idAdmin FROM Admin WHERE login = %s AND motDePasse = %s",
         (username, password)
         )
+        #cur.execute("select idAdmin from Admin where login='admin' AND motDePasse='123'")
+        # cur.execute(
+        # "SELECT idUser, type FROM Users WHERE login = %s AND motDePasse = %s",
+        # (username, password)
+        # )
         res = cur.fetchone()
-        print(res)
+        #print("res :",res)
+        #succes = True # en attendant de comprendre pourquoi ça renvoie none
         if (res) :
             succes = True        # (username, password)
-    print(succes, "<- Valeur de succes")
+
     return True
 
 def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
@@ -167,29 +168,51 @@ def ajouterClient(cur, conn, typeUtilisateur) :
     print(f"Il faut créer un compte pour le {typeUtilisateur}")
     username = input(f"Entrer le nom d'utilisateur du {typeUtilisateur}")
     password = input(f"Entrer le mot de passe du {typeUtilisateur}")
-    id_user = id_suivant(cur, "Users")
+    id_user = id_suivant(cur, "Users", "idUser")
     #On tente d'insérer le client comme utilisateur
     try:
         cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
-                VALUES (%s, %s, %s, 'client')''',
-                (id_user, username, password))
-        print(f"Création avec succès du compte client, id : {id_user}" )
+                VALUES (%s, %s, %s, %s)''',
+                (id_user, username, password, typeUtilisateur))
+        print(f"Création avec succès du compte {typeUtilisateur}, id : {id_user}\n " )
+        print(f"Veuillez desormais entrer ses informations : " )
     except psycopg2.errors:
         print("Attention, erreur lors de l'insertion !")
         return
 
-    nom = input("Entrer le nom du client : ")
-    prenom = input("Entrer le prénom du client : ")
-    dateNaissance = input("Entrer la date de naissance du client ( format YYYY-MM-DD): ")
-    adresse = input("Entrer l'adresse du client : ")
-    tel = input("Entrer le numéro de téléphone du client : ")
+    nom = input(f"Entrer le nom du {typeUtilisateur} : ")
+    prenom = input(f"Entrer le prénom du {typeUtilisateur} : ")
+    dateNaissance = input(f"Entrer la date de naissance du {typeUtilisateur} ( format YYYY-MM-DD): ")
+    adresse = input(f"Entrer l'adresse du {typeUtilisateur} : ")
+    tel = input(f"Entrer le numéro de téléphone du {typeUtilisateur} : ")
+    print("Choix de la specialite : ")
+    #gestion des espèces : on affiche celles qui existent déjà, si l'animal n'appartient à aucune d'elles, on propose à l'utilisateur de créer une nouvelle espèce
+    cur.execute('''SELECT * FROM Espece''')
+    res = cur.fetchall()
+    nombreEspecesTotal = len(res)
+    colonnesEspeces = ["idEspece", "typeEspece", "intitulePrecis"]
+    affichageSelect(colonnesEspeces, res)
+    estDedans= ""
+    idEspeceChoisie = -1
+    while(estDedans != "oui" and estDedans!= "non") :
+        estDedans = input("L'espèce d'animal qui est votre specialite apparaît-elle dans la liste ? (oui | non)")
+    if (estDedans == "oui") :
+        idEspeceChoisie = int(input("Entrez l'id de l'espèce de votre animal"))
+        while (idEspeceChoisie < 0 or idEspeceChoisie > nombreEspecesTotal) :
+            print("id choisi incorrect, réessayez.")
+            idEspeceChoisie = int(input("Entrez l'id de l'espèce de votre animal"))
+    else :
+        #On doit créer une nouvelle espèce
+        idEspeceChoisie = ajouterEspece(cur, conn)
+
+
     #On tente d'insérer le client :
     try:
         cur.execute('''
                 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel)
                 VALUES (%s, %s, %s, %s, %s, %s) RETURNING idClient''',
-                (id_suivant(cur, "Client"), nom, prenom, dateNaissance, adresse, tel))
+                (id_suivant(cur, "Client", "idClient"), nom, prenom, dateNaissance, adresse, tel))
 
         print("Client ajouté avec succès.")
     except psycopg2.errors:
@@ -227,7 +250,7 @@ def statistiques_medicament(cur) :
 
 
 def ajouterAnimal(cur, conn):
-    idAnimal = id_suivant(cur, "Animal")
+    idAnimal = id_suivant(cur, "Animal", "idAnimal")
     nomAnimal = input("Entrez le nom de l'animal : ")
     numPuceId = input("Entrez le numéro de puce de l'animal (opt. entrez 'non' pour ne pas spécifier)")
     if (numPuceId == "non") :
@@ -362,7 +385,7 @@ def modifierAnimal(cur, conn):
         return
 
 def ajouterEspece(cur, conn) :
-    idEspece = id_suivant(cur, "Espece")
+    idEspece = id_suivant(cur, "Espece","idEspece")
     typesEspeces = ["félin", "canidé", "reptile", "rongeur", "oiseau", "autre"]
     print('''Voici les types d'especes possibles :\n
           0. félin\n

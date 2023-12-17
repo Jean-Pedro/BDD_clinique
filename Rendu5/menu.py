@@ -2,10 +2,10 @@ import psycopg2
 from fonctions import *
 
 conn = psycopg2.connect(
-      user = "nf18a076",
-      password = "mNMP233psq6K",
+      user = "nf18a068",
+      password = "Lm0mhUpSY50v",
       host = "tuxa.sme.utc",
-      database = "dbnf18a076"
+      database = "dbnf18a068"
 )
 cur = conn.cursor()
 
@@ -99,16 +99,16 @@ if (succesConnexionAdministrateur) :
             choixModif = -1
             while (choixModif != 0) :
                 print('''------Menu Modification BDD------\n
-                    0. Revenir au menu précédent
-                    1. Creer un client\n
-                    2. Mettre a jour un client\n
-                    3. Supprimer un client\n
-                    4. Creer un veterinaire\n
-                    5. Mettre a jour un veterinaire\n
-                    6. Supprimer un veterinaire\n
-                    7. Creer un assistant\n
-                    8. Mettre a jour un assistant\n
-                    9. Supprimer un assistant\n''')
+                0. Revenir au menu précédent\n
+                1. Creer un client\n
+                2. Mettre a jour un client\n
+                3. Supprimer un client\n
+                4. Creer un veterinaire\n
+                5. Mettre a jour un veterinaire\n
+                6. Supprimer un veterinaire\n
+                7. Creer un assistant\n
+                8. Mettre a jour un assistant\n
+                9. Supprimer un assistant\n''')
                 choixModif= int(input("Votre choix ? : "))
                 if (choixModif == 0) :
                     choixAdmin = -1
