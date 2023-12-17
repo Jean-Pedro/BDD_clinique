@@ -113,7 +113,7 @@ if (succesConnexionAdministrateur) :
                 choixAdmin = -1
                 #la boucle while sur choixAdmin tourne donc à nouveau
             elif (choixModif == 1) :
-                ajouterClient(cur, conn)
+                ajouterClient(cur, conn, "client")
             elif (choixModif == 2) :
                 pass #à remplacer par l'appel à la bonne méthode
             elif (choixModif == 3) :

@@ -3,6 +3,7 @@
 import psycopg2
 
 def id_suivant(cur, table:str):
+    # Cette fonctin permet de récupérer le prochain id à utiliser pour une table donnée
     cur.execute("(SELECT MAX(idUser) FROM "+ table +")")
     last_id = cur.fetchone()
     if last_id == None:
@@ -77,7 +78,7 @@ def connexionAdministrateur(cur) :
         username = input("Nom d'utilisateur : ")
         password = input("Mot de passe : ")
         cur.execute(
-        "SELECT COUNT(*) FROM Admins WHERE login = %s AND motDePasse = %s",
+        "SELECT COUNT(*) FROM Admin WHERE login = %s AND motDePasse = %s",
         (username, password)
         )
         res = cur.fetchone()
@@ -152,10 +153,10 @@ def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     for dossier in dossiersMedicaux :
         afficherDossierMedical(dossier, cur)
 
-def ajouterClient(cur, conn) :
-    print("Il faut créer un compte pour le client")
-    username = input("Entrer le nom d'utilisateur du client")
-    password = input("Entrer le mot de passe du client")
+def ajouterClient(cur, conn, typeUtilisateur) :
+    print(f"Il faut créer un compte pour le {typeUtilisateur}")
+    username = input(f"Entrer le nom d'utilisateur du {typeUtilisateur}")
+    password = input(f"Entrer le mot de passe du {typeUtilisateur}")
     id_user = id_suivant(cur, "Users")
     #On tente d'insérer le client comme utilisateur
     try:    

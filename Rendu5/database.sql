@@ -147,7 +147,7 @@ SELECT M.nomMol, M.quantiteMedicamentJour*DM.dureeTraitement AS quantiteTotaleCo
 FROM ContientMedicDoss AS CMD 
 JOIN DossierMedical AS DM ON CMD.dossier = DM.idDossier
 JOIN Medicament AS M ON CMD.medicament = M.nomMol
-GROUP BY M.nomMol
+GROUP BY M.nomMol;
 
 
 
@@ -165,7 +165,7 @@ INSERT INTO Users (idUser, login, motDePasse, type) VALUES(11, 'user11', '123456
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(12, 'user12', '123456789', 'veterinaire');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(13, 'user13', '123456789', 'veterinaire');
 
-
+INSERT INTO Admin (idAdmin, login, motDePasse ) VALUES(1, 'admin', '123');
 
 --  Medicaments
 
@@ -249,7 +249,7 @@ INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specia
 
 -- DossierMédical
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10;
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10);
 
 INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (2, 100, 50, '2004-12-04', 30, 'Blessure à la tête', 'Guérir la tête', '2004-12-03', 2, 10);
 
