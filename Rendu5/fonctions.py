@@ -13,8 +13,9 @@ def id_suivant(cur, table:str, id:str):
 
 def affichageSelect(colonnes:tuple, result:tuple):
 
+
     len_colonnes = [max(len(colonnes[i]), max((len(str(result[j][i])) for j in range(len(result))))) for i in range(len(colonnes))]
-    print(len_colonnes)
+    #print(len_colonnes)
 
 
     print(f" {'Ligne':{max(5, len(str(len(result))))}s} |" ,end="")
@@ -233,6 +234,77 @@ def ajouterUser(cur, conn, typeUtilisateur) :
         print(f"{typeUtilisateur} ajouté avec succès.")
     except psycopg2.errors:
         print(f"Echec de l'insertion, le {typeUtilisateur} pourrait déjà exister")
+        return
+    conn.commit()
+
+def updateUser(cur, conn, typeUtilisateur):
+    print("Voici tous les utilisateurs : ")
+
+    if (typeUtilisateur == 'client'):
+        cur.execute('''SELECT * FROM Client''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel')
+    elif (typeUtilisateur == 'assistant'):
+        cur.execute('''SELECT * FROM Assistant''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+    else:
+        cur.execute('''SELECT * FROM Veterinaire''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+
+    res = cur.fetchall()
+    affichageSelect(colonnes, res)
+    ligneUtilisateurChoisie = int(input(f"Entrez le numéro de ligne du {typeUtilisateur} a mettre a jour : "))
+    idUtilisateurChoisie = res[ligneUtilisateurChoisie][0]
+
+
+    nom = input(f"Entrer le nom du {typeUtilisateur} : ")
+    prenom = input(f"Entrer le prénom du {typeUtilisateur} : ")
+    dateNaissance = input(f"Entrer la date de naissance du {typeUtilisateur} ( format YYYY-MM-DD): ")
+    adresse = input(f"Entrer l'adresse du {typeUtilisateur} : ")
+    tel = input(f"Entrer le numéro de téléphone du {typeUtilisateur} : ")
+
+    if (typeUtilisateur == "veterinaire" or typeUtilisateur =="assistant"):
+        print("Choix de la specialite : ")
+        #gestion des espèces : on affiche celles qui existent déjà, si l'animal n'appartient à aucune d'elles, on propose à l'utilisateur de créer une nouvelle espèce
+        cur.execute('''SELECT * FROM Espece''')
+        res = cur.fetchall()
+        #print(res)
+        nombreEspecesTotal = len(res)
+        colonnesEspeces = ["idEspece", "typeEspece", "intitulePrecis"]
+        affichageSelect(colonnesEspeces, res)
+        estDedans= ""
+        idEspeceChoisie = -1
+        while(estDedans != "oui" and estDedans!= "non") :
+            estDedans = input("L'espèce d'animal qui est votre specialite apparaît-elle dans la liste ? (oui | non) : ")
+        if (estDedans == "oui") :
+            idEspeceChoisie = int(input("Entrez le numéro de ligne de l'espèce de votre animal : "))
+            while (idEspeceChoisie < 0 or idEspeceChoisie > nombreEspecesTotal) :
+                print("id choisi incorrect, réessayez.")
+                idEspeceChoisie = int(input("Entrez le numéro de ligne de l'espèce de votre animal : "))
+            idEspeceChoisie = res[idEspeceChoisie][0]
+        else :
+            #On doit créer une nouvelle espèce
+            idEspeceChoisie = ajouterEspece(cur, conn)
+
+
+    #On tente d'insérer le client :
+    try:
+        if (typeUtilisateur == "client"):
+            cur.execute('''
+                UPDATE Client SET nom = %s, prenom = %s, dateNaissance = %s, adresse = %s, tel = %s WHERE idClient = %s''',
+                (nom, prenom, dateNaissance, adresse, tel, idUtilisateurChoisie))
+        elif (typeUtilisateur == "assistant"):
+            cur.execute('''
+                UPDATE Assistant SET nom = %s, prenom = %s, dateNaissance = %s, adresse = %s, tel = %s, specialite = %s WHERE idAssist = %s''',
+                (nom, prenom, dateNaissance, adresse, tel, idEspeceChoisie, idUtilisateurChoisie))
+
+        elif (typeUtilisateur == "veterinaire"):
+            cur.execute('''
+                UPDATE Veterinaire SET nom = %s, prenom = %s, dateNaissance = %s, adresse = %s, tel = %s, specialite = %s WHERE idVet = %s''',
+                (nom, prenom, dateNaissance, adresse, tel, idEspeceChoisie, idUtilisateurChoisie))
+
+        print(f"{typeUtilisateur} mis a jour avec succès.")
+    except psycopg2.errors:
+        print(f"Echec de l'update")
         return
     conn.commit()
 

@@ -132,19 +132,19 @@ if (succesConnexionAdministrateur) :
                 elif (choixModif == 1) :
                     ajouterUser(cur, conn, "client")
                 elif (choixModif == 2) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    updateUser(cur, conn, "client")
                 elif (choixModif == 3) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 4) :
                     ajouterUser(cur, conn, "veterinaire")
                 elif (choixModif == 5) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    updateUser(cur, conn, "veterinaire")
                 elif (choixModif == 6) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixModif == 7) :
                     ajouterUser(cur, conn, "assistant")
                 elif (choixModif == 8) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    updateUser(cur, conn, "assistant")
                 elif (choixModif == 9) :
                     pass #à remplacer par l'appel à la bonne méthode
         elif (choixAdmin == 2) :
