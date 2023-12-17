@@ -1,4 +1,5 @@
 
+DROP TABLE IF EXISTS Users CASCADE;
 CREATE TABLE Users
 (
     idUser INTEGER PRIMARY KEY,
@@ -8,6 +9,7 @@ CREATE TABLE Users
     CHECK (type IN ('veterinaire', 'assistant', 'client'))
 );
 
+DROP TABLE IF EXISTS Admin CASCADE;
 CREATE TABLE Admin
 (
     idAdmin INTEGER PRIMARY KEY,
@@ -15,6 +17,7 @@ CREATE TABLE Admin
     motDePasse VARCHAR(30) NOT NULL
 );
 
+DROP TABLE IF EXISTS Medicament CASCADE;
 CREATE TABLE Medicament (
     nomMol VARCHAR(100) PRIMARY KEY,
     description TEXT NOT NULL,
@@ -23,11 +26,13 @@ CREATE TABLE Medicament (
 
 
 
+DROP TABLE IF EXISTS ResultatAnalyse CASCADE;
 CREATE TABLE ResultatAnalyse (
     idResultat INTEGER PRIMARY KEY,
     lien VARCHAR(150)
 );
 
+DROP TABLE IF EXISTS Client CASCADE;
 CREATE TABLE Client (
     idClient INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
@@ -37,6 +42,7 @@ CREATE TABLE Client (
     tel VARCHAR(11) NOT NULL
 );
 
+DROP TABLE IF EXISTS Espece CASCADE;
 CREATE TABLE Espece(
     idEspece INTEGER PRIMARY KEY,
     typeEspece VARCHAR(30),
@@ -45,6 +51,7 @@ CREATE TABLE Espece(
     CHECK ( NOT (intitulePrecis IS NULL AND typeEspece='autre'))
 );
 
+DROP TABLE IF EXISTS Assistant CASCADE;
 CREATE TABLE Assistant (
     idAssist INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
@@ -55,6 +62,7 @@ CREATE TABLE Assistant (
     specialite INTEGER REFERENCES Espece(idEspece)
 );
 
+DROP TABLE IF EXISTS Animal CASCADE;
 CREATE TABLE Animal (
     idAnimal INTEGER PRIMARY KEY,
     nom VARCHAR(50) NOT NULL,
@@ -65,6 +73,7 @@ CREATE TABLE Animal (
     CHECK (taille in ('petite', 'moyenne', 'autre'))
 );
 
+DROP TABLE IF EXISTS Veterinaire CASCADE;
 CREATE TABLE Veterinaire (
     idVet INTEGER PRIMARY KEY REFERENCES Users(idUser),
     nom VARCHAR(100) NOT NULL,
@@ -75,6 +84,7 @@ CREATE TABLE Veterinaire (
     specialite INTEGER REFERENCES Espece(idEspece)
 );
 
+DROP TABLE IF EXISTS DossierMedical CASCADE;
 CREATE TABLE DossierMedical (
     idDossier INTEGER PRIMARY KEY,
     mesureTaille INTEGER,
@@ -90,14 +100,14 @@ CREATE TABLE DossierMedical (
 );
 
 
-
-
+DROP TABLE IF EXISTS AFaitVet CASCADE;
 CREATE TABLE AFaitVet(
 	veterinaire INTEGER REFERENCES Veterinaire(idVet),
 	dossier INTEGER REFERENCES DossierMedical(idDossier),
 	PRIMARY KEY (veterinaire, dossier)
 );
 
+DROP TABLE IF EXISTS AFaitAssist CASCADE;
 CREATE TABLE AFaitAssist(
 	assistant INTEGER REFERENCES Assistant(idAssist),
 	dossier INTEGER REFERENCES DossierMedical(idDossier),
@@ -105,12 +115,14 @@ CREATE TABLE AFaitAssist(
 );
 
 
+DROP TABLE IF EXISTS ContientResultDoss CASCADE;
 CREATE TABLE ContientResultDoss(
 	resultat INTEGER REFERENCES ResultatAnalyse(idResultat),
 	dossier INTEGER REFERENCES DossierMedical(idDossier),
 	PRIMARY KEY (resultat, dossier)
 );
 
+DROP TABLE IF EXISTS ContientMedicDoss CASCADE;
 CREATE TABLE ContientMedicDoss(
 	medicament VARCHAR(100) REFERENCES Medicament(nomMol),
 	dossier INTEGER REFERENCES DossierMedical(idDossier),
@@ -118,21 +130,24 @@ CREATE TABLE ContientMedicDoss(
 );
 
 
+DROP TABLE IF EXISTS autorisePour CASCADE;
 CREATE TABLE autorisePour (
     medicament VARCHAR(11) REFERENCES Medicament(nomMol),
     espece INTEGER REFERENCES Espece(idEspece),
     PRIMARY KEY (medicament, espece)
-);  
+);
 
+DROP TABLE IF EXISTS EstSuiviPar CASCADE;
 CREATE TABLE EstSuiviPar (
     animal INTEGER REFERENCES Animal(idAnimal),
     veterinaire INTEGER REFERENCES Veterinaire(idVet),
     debut DATE NOT NULL,
-    fin DATE, 
+    fin DATE,
     PRIMARY KEY (animal, veterinaire)
 );
 -- On pensera à vérifier la contrainte complexe de minimalité dans la couche applicative'
 
+DROP TABLE IF EXISTS EstPossedePar CASCADE;
 CREATE TABLE EstPossedePar(
     animal INTEGER REFERENCES Animal(idAnimal),
     client INTEGER REFERENCES Client(idClient),
@@ -142,9 +157,9 @@ CREATE TABLE EstPossedePar(
 );
 
 -- Vue pour les statistiques de consommation de médicaments
-CREATE VIEW quantiteMedicamentConsommee AS 
+CREATE VIEW quantiteMedicamentConsommee AS
 SELECT M.nomMol, M.quantiteMedicamentJour*DM.dureeTraitement AS quantiteTotaleConsommee
-FROM ContientMedicDoss AS CMD 
+FROM ContientMedicDoss AS CMD
 JOIN DossierMedical AS DM ON CMD.dossier = DM.idDossier
 JOIN Medicament AS M ON CMD.medicament = M.nomMol
 GROUP BY M.nomMol;
@@ -159,7 +174,7 @@ INSERT INTO Users (idUser, login, motDePasse, type) VALUES(5, 'user5', '12345678
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(6, 'user6', '123456789', 'client');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(7, 'user7', '123456789', 'assistant');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(8, 'user8', '123456789', 'assistant');
-INSERT INTO Users (idUser, login, motDePasse, type) VALUES(9, 'user8', '123456789', 'assistant');
+INSERT INTO Users (idUser, login, motDePasse, type) VALUES(9, 'user9', '123456789', 'assistant');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(10, 'user10', '123456789', 'veterinaire');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(11, 'user11', '123456789', 'veterinaire');
 INSERT INTO Users (idUser, login, motDePasse, type) VALUES(12, 'user12', '123456789', 'veterinaire');
@@ -192,7 +207,7 @@ INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (5, 'https://messuperresul
 -- Clients
 
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (1, 'Darmanin', 'Gérald', '1982-10-11', 'Hôtel de Beauvau, Paris', '0607080910');
-	
+
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (2, 'Borne', 'Elizabeth', '1961-04-18', 'Hôtel de Matignon, Paris 7ème', '0607883911');
 
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (3, 'Macron', 'Emmanuel', '1977-12-21', 'Palais de l Elysee, Paris 8ème', '0907688920');
@@ -340,5 +355,3 @@ INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (2, 1, '2017-08-27
 INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (3, 3, '2014-09-24', '2022-10-08');
 
 INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (4, 1, '2013-02-24', '2017-11-18');
-
-

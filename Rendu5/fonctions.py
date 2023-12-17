@@ -67,6 +67,7 @@ def connexionUtilisateur(cur) :
         (username, password)
         )
         res = cur.fetchone()
+        #print(res)
         if (res) :
             succes = True
     return res
@@ -77,13 +78,22 @@ def connexionAdministrateur(cur) :
         print("---Connexion Administrateur---")
         username = input("Nom d'utilisateur : ")
         password = input("Mot de passe : ")
+
+        # cur.execute(
+        # "SELECT idAdmin FROM Admin WHERE login = %s AND motDePasse = %s",
+        # (username, password)
+        # )
+        #cur.execute("select idAdmin from Admin where login='admin' AND motDePasse='123'")
         cur.execute(
-        "SELECT COUNT(*) FROM Admin WHERE login = %s AND motDePasse = %s",
+        "SELECT idUser, type FROM Users WHERE login = %s AND motDePasse = %s",
         (username, password)
         )
         res = cur.fetchone()
-        succes = (res != 0)
-    return succes
+        print(res)
+        if (res) :
+            succes = True        # (username, password)
+    print(succes, "<- Valeur de succes")
+    return True
 
 def afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur):
     #affichage client
@@ -159,7 +169,7 @@ def ajouterClient(cur, conn, typeUtilisateur) :
     password = input(f"Entrer le mot de passe du {typeUtilisateur}")
     id_user = id_suivant(cur, "Users")
     #On tente d'insérer le client comme utilisateur
-    try:    
+    try:
         cur.execute('''
                 INSERT INTO Users (idUser, login, motDePasse, type)
                 VALUES (%s, %s, %s, 'client')''',
@@ -168,7 +178,7 @@ def ajouterClient(cur, conn, typeUtilisateur) :
     except psycopg2.errors:
         print("Attention, erreur lors de l'insertion !")
         return
-    
+
     nom = input("Entrer le nom du client : ")
     prenom = input("Entrer le prénom du client : ")
     dateNaissance = input("Entrer la date de naissance du client ( format YYYY-MM-DD): ")
@@ -191,20 +201,20 @@ def ajouterClient(cur, conn, typeUtilisateur) :
 def statistiques_clinique(cur) :
     #On veut un affichage du nombre de clients, d'animaux, de vétérinaires et d'assistants enregistrés dans la base de données.
     cur.execute('''SELECT COUNT(*) FROM Client''')
-    nbClients = cur.fetchone()
+    nbClients = cur.fetchone()[0]
     cur.execute('''SELECT COUNT(*) FROM Animal''')
-    nbAnimaux = cur.fetchone()
+    nbAnimaux = cur.fetchone()[0]
     cur.execute('''SELECT COUNT(*) FROM Veterinaire''')
-    nbVeterinaires = cur.fetchone()
+    nbVeterinaires = cur.fetchone()[0]
     cur.execute('''SELECT COUNT(*) FROM Assistant''')
-    nbAssistants = cur.fetchone()
+    nbAssistants = cur.fetchone()[0]
     print(f''' La base de donnée contient exactement :\n
           - {nbClients} Clients\n
           - {nbAnimaux} Animaux\n
           - {nbVeterinaires} Vétérinaires\n
           - {nbAssistants} Assistants\n
     ''')
-    
+
 def statistiques_medicament(cur) :
     #On veut récupérer pour chaque médicament, le nombre de médicaments consommés (medic.quantiteMedicamentJour * dm.dureeTraitement)
     #On utilise pour cela une vue : quantiteMedicamentConsommee
@@ -214,8 +224,8 @@ def statistiques_medicament(cur) :
         print("echec de la requête pour les statistiques des médicaments")
     colonnes = ("Nom médicament", "Quantité totale consommée")
     affichageSelect(colonnes, res)
-    
-    
+
+
 def ajouterAnimal(cur, conn):
     idAnimal = id_suivant(cur, "Animal")
     nomAnimal = input("Entrez le nom de l'animal : ")
@@ -255,7 +265,7 @@ def ajouterAnimal(cur, conn):
         #On doit créer une nouvelle espèce
         idEspeceChoisie = ajouterEspece(cur, conn)
     #À ce stade, on connaît l'id de l'espèce choisie, on peut donc insérer l'animal dans la table Animal
-    try : 
+    try :
         cur.execute('''INSERT INTO Animal VALUES (%s, %s, %s, %s, %s, %s) ''',
                     (idAnimal, nomAnimal, numPuceId, numPasseport, tailleAnimal, idEspeceChoisie))
         print(f"Insertion de l'animal {nomAnimal} avec succès.")
@@ -295,7 +305,7 @@ def modifierAnimal(cur, conn):
             JOIN Espece E ON A.espece = E.idEspece
             WHERE A.idAnimal = %s''', (idAnimal,))
             animalChoisi = cur.fetchone()
-    #On connaît l'animal choisi, on l'affiche à nouveau avant de proposer de le modifier 
+    #On connaît l'animal choisi, on l'affiche à nouveau avant de proposer de le modifier
     affichageSelect(("idAnimal", "nom", "numPuceId", "numPasseport", "taille", "type espèce", "intitulé précis"), animalChoisi)
     nouveauNom = animalChoisi[1]
     nouveauNumPuceId = animalChoisi[2]
@@ -317,13 +327,13 @@ def modifierAnimal(cur, conn):
         if (choixModifAnimal == 1) :
             nouveauNom = input("Entrez le nouveau nom de l'animal : ")
             print(f"Le nom sera désormais : {nouveauNom}")
-        elif (choixModifAnimal == 2) : 
+        elif (choixModifAnimal == 2) :
             nouveauNumPuceId = int(input("Entrez le nouveau numéro de puce d'identification de l'animal : "))
-            print(f"Le numéro de puce sera désormais : {nouveauNumPuceId}")   
-        elif (choixModifAnimal == 3) : 
+            print(f"Le numéro de puce sera désormais : {nouveauNumPuceId}")
+        elif (choixModifAnimal == 3) :
             nouveauNumPasseport = int(input("Entrez le nouveau numéro de passeport de l'animal : "))
             print(f"Le numéro de passeport sera désormais : {nouveauNumPasseport}")
-        elif (choixModifAnimal == 4) : 
+        elif (choixModifAnimal == 4) :
             nouvelleTaille = int(input("Entrez la nouvelle taille de l'animal : "))
             print(f"La nouvelle taille sera désormais : {nouvelleTaille}")
         elif (choixModifAnimal == 5) :
@@ -349,7 +359,7 @@ def modifierAnimal(cur, conn):
         cur.execute('''UPDATE Animal SET nom=%s, numPuceId=%s, numPasseport=%s, taille=%s, espece=%s WHERE idAnimal=%s''', (nouveauNom, nouveauNumPuceId, nouveauNumPasseport, nouvelleTaille, nouvelIdEspece, animalChoisi[0]))
     except psycopg2.errors :
         print("Attention ! Erreur lors de la modification de l'animal.")
-        return     
+        return
 
 def ajouterEspece(cur, conn) :
     idEspece = id_suivant(cur, "Espece")
@@ -367,7 +377,7 @@ def ajouterEspece(cur, conn) :
         choixType=  int(input("Votre choix ? (0...5) :"))
     typeEspece = typesEspeces[choixType]
     intitulePrecisEspece = input("Entrez l'intitulé précis de l'espèce : ")
-    try : 
+    try :
         cur.execute('''INSERT INTO Espece VALUES (%s, %s, %s)''',
                     (idEspece, typeEspece, intitulePrecisEspece))
     except psycopg2.errors :

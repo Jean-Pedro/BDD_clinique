@@ -13,6 +13,7 @@ cur = conn.cursor()
 
 choixModeConnexion = -1
 succesConnexionAdministrateur = False
+typeUtilisateur =""
 while (choixModeConnexion != 0 and choixModeConnexion != 1 and choixModeConnexion != 2) :
     print(
     '''------Menu Connexion------\n
@@ -66,9 +67,9 @@ if (typeUtilisateur == "veterinaire"):
             #creerDossierMedical(cur, idUtilisateur, typeUtilisateur) #pas encore fait
         elif (choixVet == 3) :
             ajouterClient(cur, conn)
-        elif (choixVet == 4) : 
+        elif (choixVet == 4) :
             ajouterAnimal(cur, conn)
-        elif (choixVet == 5) : 
+        elif (choixVet == 5) :
             modifierAnimal(cur, conn)
 
     #creer dossier medicaux
@@ -109,48 +110,49 @@ if (succesConnexionAdministrateur) :
                     8. Mettre a jour un assistant\n
                     9. Supprimer un assistant\n''')
                 choixModif= int(input("Votre choix ? : "))
-            if (choixModif == 0) :
-                choixAdmin = -1
-                #la boucle while sur choixAdmin tourne donc à nouveau
-            elif (choixModif == 1) :
-                ajouterClient(cur, conn, "client")
-            elif (choixModif == 2) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 3) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 4) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 5) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 6) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 7) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 8) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixModif == 9) :
-                pass #à remplacer par l'appel à la bonne méthode
+                if (choixModif == 0) :
+                    choixAdmin = -1
+                    #la boucle while sur choixAdmin tourne donc à nouveau
+                elif (choixModif == 1) :
+                    ajouterClient(cur, conn, "client")
+                elif (choixModif == 2) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 3) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 4) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 5) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 6) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 7) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 8) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 9) :
+                    pass #à remplacer par l'appel à la bonne méthode
         elif (choixAdmin == 2) :
             choixStats = -1
-            print('''------Menu Statistiques------\n
+            while choixStats != 0 :
+                print('''------Menu Statistiques------\n
                   0. Revenir au menu précédent\n
                   1. Statistiques générales sur la base de données\n
                   2. Voir les médicaments consommés\n
                   3. Voir un rapport d'activité d'un vétérinaire\n
                   4. Voir un rapport d'activité d'un assistant\n
                   ''')
-            choixStats = int(input("Votre choix ? : "))
-            if (choixStats == 0) :
-                choixAdmin = -1
-                #la boucle while sur choixAdmin tourne donc à nouveau
-            elif (choixStats == 1) :
-                statistiques_clinique(cur)
-            elif (choixStats == 2) :
-                statistiques_medicament(cur)
-            elif (choixStats == 3) :
-                pass #à remplacer par l'appel à la bonne méthode
-            elif (choixStats == 4) :
-                pass #à remplacer par l'appel à la bonne méthode
+                choixStats = int(input("Votre choix ? : "))
+                if (choixStats == 0) :
+                    choixAdmin = -1
+                    #la boucle while sur choixAdmin tourne donc à nouveau
+                elif (choixStats == 1) :
+                    statistiques_clinique(cur)
+                elif (choixStats == 2) :
+                    statistiques_medicament(cur)
+                elif (choixStats == 3) :
+                    pass #à remplacer par l'appel à la bonne méthode
+                elif (choixStats == 4) :
+                    pass #à remplacer par l'appel à la bonne méthode
 
 
 
