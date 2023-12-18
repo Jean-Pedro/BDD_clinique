@@ -237,8 +237,9 @@ def ajouterUser(cur, conn, typeUtilisateur) :
         return
     conn.commit()
 
+
 def updateUser(cur, conn, typeUtilisateur):
-    print("Voici tous les utilisateurs : ")
+    print(f"Voici tous les {typeUtilisateur}s : ")
 
     if (typeUtilisateur == 'client'):
         cur.execute('''SELECT * FROM Client''')
@@ -286,7 +287,7 @@ def updateUser(cur, conn, typeUtilisateur):
             idEspeceChoisie = ajouterEspece(cur, conn)
 
 
-    #On tente d'insérer le client :
+    #On tente de mettre à jour le client :
     try:
         if (typeUtilisateur == "client"):
             cur.execute('''
@@ -301,6 +302,46 @@ def updateUser(cur, conn, typeUtilisateur):
             cur.execute('''
                 UPDATE Veterinaire SET nom = %s, prenom = %s, dateNaissance = %s, adresse = %s, tel = %s, specialite = %s WHERE idVet = %s''',
                 (nom, prenom, dateNaissance, adresse, tel, idEspeceChoisie, idUtilisateurChoisie))
+
+        print(f"{typeUtilisateur} mis a jour avec succès.")
+    except psycopg2.errors:
+        print(f"Echec de l'update")
+        return
+    conn.commit()
+
+def deleteUser(cur, conn, typeUtilisateur):
+    print(f"Voici tous les {typeUtilisateur}s : ")
+
+    if (typeUtilisateur == 'client'):
+        cur.execute('''SELECT * FROM Client''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel')
+    elif (typeUtilisateur == 'assistant'):
+        cur.execute('''SELECT * FROM Assistant''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+    else:
+        cur.execute('''SELECT * FROM Veterinaire''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+
+    res = cur.fetchall()
+    affichageSelect(colonnes, res)
+    ligneUtilisateurChoisie = int(input(f"Entrez le numéro de ligne du {typeUtilisateur} a supprimer : "))
+    idUtilisateurChoisie = res[ligneUtilisateurChoisie][0]
+
+
+    
+    #On tente de supprimer le client et le user associé dans la table users :
+    try:
+        if (typeUtilisateur == "client"):
+            cur.execute('''DELETE FROM Client WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
+            
+        elif (typeUtilisateur == "assistant"):
+            cur.execute('''DELETE FROM Assistant WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
+
+        elif (typeUtilisateur == "veterinaire"):
+            cur.execute('''DELETE FROM Veterinaire WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
 
         print(f"{typeUtilisateur} mis a jour avec succès.")
     except psycopg2.errors:
@@ -691,6 +732,31 @@ def ajouterResultatAnalyse(cur, conn) :
     print(f"Le résultat d'analyse d'id {idResultat} correspondant au lien {lienResultat} a été inséré avec succes")
     #On retourne l'id du résultat d'analyse nouvellement inséré
     return idResultat
+
+def statistiques_traitement(cur) :
+    cur.execute('''SELECT idDossier, debutTraitement, dureeTraitement FROM DossierMedical
+                WHERE debutTraitement + interval '1' day * dureeTraitement < current_date;''')
+    res = cur.fetchall()
+    if (not res) :
+        print("echec de la requête pour les statistiques des traitements encore en cours")
+    colonnes = ("idDossier", "debutTraitement", "dureeTraitement")
+    affichageSelect(colonnes, res)
+
+def ajouterAdmin(cur, conn) :
+    username = input(f"Entrer le login du nouvel Administrateur : ")
+    password = input(f"Entrer le mot de passe du nouvel Administrateur : ")
+    id_admin = id_suivant(cur, "Admin", "idAdmin")
+    try:
+        cur.execute('''
+                INSERT INTO Admin (idAdmin, login, motDePasse)
+                VALUES (%s, %s, %s)''',
+                (id_admin, username, password))
+        print(f"Création avec succès du compte Administrateur, id : {id_admin}\n " )
+    except psycopg2.errors:
+        print("Attention, erreur lors de l'insertion ! Un administrateur avec le meme nom existe peut etre.")
+        return
+    conn.commit()
+
 
 def afficherRapportActiviteVeto(cur):
     cur.execute('''SELECT idVet, nom, prenom FROM Veterinaire''')

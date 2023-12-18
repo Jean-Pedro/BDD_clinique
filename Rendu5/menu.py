@@ -67,7 +67,7 @@ if (typeUtilisateur == "veterinaire"):
         elif (choixVet == 2) :
             creerDossierMedical(cur, conn)
         elif (choixVet == 3) :
-            ajouterClient(cur, conn)
+            ajouterUser(cur, conn, "client")
         elif (choixVet == 4) :
             ajouterAnimal(cur, conn)
         elif (choixVet == 5) :
@@ -87,8 +87,8 @@ if (typeUtilisateur == "assistant"):
         0. Quitter\n
         1. Consulter les infos d'un animal\n
         2. Ajouter un dossier médical''')
-        choixVet = int(input("Votre choix ? : "))
-        if (choixVet == 0) :
+        choixAssist = int(input("Votre choix ? : "))
+        if (choixAssist == 0) :
             exit()
         elif (choixAssist == 1) :
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
@@ -124,7 +124,8 @@ if (succesConnexionAdministrateur) :
                 6. Supprimer un veterinaire\n
                 7. Creer un assistant\n
                 8. Mettre a jour un assistant\n
-                9. Supprimer un assistant\n''')
+                9. Supprimer un assistant\n
+                10. Creer un administrateur\n''')
                 choixModif= int(input("Votre choix ? : "))
                 if (choixModif == 0) :
                     choixAdmin = -1
@@ -147,6 +148,8 @@ if (succesConnexionAdministrateur) :
                     updateUser(cur, conn, "assistant")
                 elif (choixModif == 9) :
                     pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 10) :
+                    ajouterAdmin(cur, conn)
         elif (choixAdmin == 2) :
             choixStats = -1
             while choixStats != 0 :
@@ -156,6 +159,7 @@ if (succesConnexionAdministrateur) :
                   2. Voir les médicaments consommés\n
                   3. Voir un rapport d'activité d'un vétérinaire\n
                   4. Voir un rapport d'activité d'un assistant\n
+                  5. Voir les traitements en cours\n
                   ''')
                 choixStats = int(input("Votre choix ? : "))
                 if (choixStats == 0) :
@@ -169,6 +173,8 @@ if (succesConnexionAdministrateur) :
                     afficherRapportActiviteVeto(cur)
                 elif (choixStats == 4) :
                     afficherRapportActiviteAssistant(cur)
+                elif (choixStats == 5) :
+                    statistiques_traitement(cur)
 
 
 
