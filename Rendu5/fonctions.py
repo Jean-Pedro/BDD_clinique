@@ -331,13 +331,13 @@ def deleteUser(cur, conn, typeUtilisateur):
     idUtilisateurChoisie = res[ligneUtilisateurChoisie][0]
 
 
-    
+
     #On tente de supprimer le client et le user associé dans la table users :
     try:
         if (typeUtilisateur == "client"):
             cur.execute('''DELETE FROM Client WHERE idClient = %s''', (idUtilisateurChoisie))
             cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
-            
+
         elif (typeUtilisateur == "assistant"):
             cur.execute('''DELETE FROM Assistant WHERE idClient = %s''', (idUtilisateurChoisie))
             cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
@@ -351,6 +351,28 @@ def deleteUser(cur, conn, typeUtilisateur):
         print(f"Echec de l'update")
         return
     conn.commit()
+
+
+def ajoutMedicament(cur, conn) :
+    print(f" Veuillez entrer les informations du medicament ")
+    nomMol = input(f"Entrer le nom de la molecule  : ")
+    description = input(f"Entrer la description du medicament : ")
+    quantiteMedicamentJour = int(input(f"Entrer la quantite de medicament a consommer par jour sous la forme d'un entier : "))
+
+    #On tente d'insérer le medicament :
+    try:
+
+        cur.execute('''
+            INSERT INTO Medicament (nomMol, description, quantiteMedicamentJour)
+            VALUES (%s, %s, %s) ''',
+            (nomMol, description, quantiteMedicamentJour))
+
+        print(f"Médicament ajouté avec succès.\n")
+    except psycopg2.errors:
+        print(f"Echec de l'insertion")
+        return
+    conn.commit()
+
 
 
 def statistiques_clinique(cur) :
@@ -548,7 +570,7 @@ def ajouterEspece(cur, conn) :
 
 def creerDossierMedical(cur, conn):
     idDossier = id_suivant(cur, "DossierMedical", "idDossier")
-    
+
     tailleAnimal = input("Entrez la taille mesurée de l'animal (opt. entrez 'non' pour ne pas spécifier) : ")
     if (tailleAnimal == "non") :
         tailleAnimal = None
@@ -571,13 +593,13 @@ def creerDossierMedical(cur, conn):
             poidsAnimal = None
         else:
             poidsAnimal = int(poidsAnimal)
-    
+
     debutTraitement = input("Entrez la date de début du traitement prescrit (aaaa-mm-jj) : ")
     dureeTraitement = int(input("Entrez la durée du traitement prescrit : "))
     observationGenerale = input("Entrez l'observation générale rédigée : ")
     descriptionProcedure = input("Décrivez la procédure effectuée : ")
     dateSaisie = str(datetime.date.today())
-    
+
     #Gestion de l'animal traité : on affiche ceux qui existent
     cur.execute('''SELECT idAnimal, nom, numPuceId, numPasseport FROM Animal''')
     res = cur.fetchall()
@@ -588,7 +610,7 @@ def creerDossierMedical(cur, conn):
         print("Ligne choisie incorrect, réessayez.")
         animalChoisi = int(input("Entrez la ligne de l'animal traité : "))
     idAnimalChoisi = res[animalChoisi][0]
-    
+
     #Gestion du vétérinaire prescripteur : on affiche ceux qui existent
     cur.execute('''SELECT idVet, nom, prenom FROM Veterinaire''')
     res = cur.fetchall()
@@ -599,7 +621,7 @@ def creerDossierMedical(cur, conn):
         print("Ligne choisie incorrect, réessayez.")
         vetoChoisi = int(input("Entrez la ligne du vétérinaire prescripteur : "))
     idVetoChoisi = res[vetoChoisi][0]
-    
+
     #Ajout du dossier en lui-même à la base de données
     try :
         cur.execute('''INSERT INTO DossierMedical VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ''',
@@ -608,7 +630,7 @@ def creerDossierMedical(cur, conn):
     except psycopg2.errors :
         print("Attention ! Erreur lors de l'insertion du dossier.")
         return
-    
+
     #Gestion des vétérinaires ayant participé : on affiche ceux qui existent
     cur.execute('''SELECT idVet, nom, prenom FROM Veterinaire''')
     res = cur.fetchall()
@@ -634,7 +656,7 @@ def creerDossierMedical(cur, conn):
             print("id choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
             choisi = int(input("Entrez la ligne d'un vétérinaire s'il a participé à la procédure ou entrez -1 si tous les vétérinaires ayant participé ont été ajoutés : "))
         idChoisi = res[choisi][0] if choisi != -1 else -1
-            
+
     #Gestion des assistants ayant participé : on affiche ceux qui existent
     cur.execute('''SELECT idAssist, nom, prenom FROM Assistant''')
     res = cur.fetchall()
@@ -660,7 +682,7 @@ def creerDossierMedical(cur, conn):
             print("id choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
             choisi = int(input("Entrez la ligne d'un assistant s'il a participé à la procédure ou entrez -1 si tous les assistants ayant participé ont été ajoutés : "))
         idChoisi = res[choisi][0] if choisi != -1 else -1
-            
+
     #Gestion des médicaments prescrits : on affiche ceux qui existent
     cur.execute('''SELECT nomMol, description FROM Medicament''')
     res = cur.fetchall()
@@ -686,7 +708,7 @@ def creerDossierMedical(cur, conn):
             print("Ligne choisi incorrect, réessayez avec une autre ligne ou entrez -1.")
             choisi = int(input("Entrez la ligne d'un médicament s'il est prescrit ou entrez -1 si tous les médicament prescrits ont été ajoutés : "))
         idChoisi = res[choisi][0] if choisi != -1 else -1 #N'est pas à proprement parler un id mais nommé comme ça pour garder une cohérence dans le code
-            
+
     #Gestion des résulats d'analyses réalisées durant la procédure : on affiche ceux qui existent déjà, si le résultat n'est pas parmi eux, on propose à l'utilisateur de le rajouter
     cur.execute('''SELECT idResultat , lien FROM ResultatAnalyse ''')
     res = cur.fetchall()
@@ -722,9 +744,9 @@ def creerDossierMedical(cur, conn):
             #On doit créer un nouveau résultat d'analyse
             idChoisi = ajouterResultatAnalyse(cur, conn)
     conn.commit()
-    
-    
-    
+
+
+
 def ajouterResultatAnalyse(cur, conn) :
     idResultat = id_suivant(cur, "ResultatAnalyse ","idResultat")
     lienResultat = input("Entrez le lien du résultat d'analyse à ajouter : ")
@@ -794,7 +816,7 @@ def afficherRapportActiviteVeto(cur):
     res = cur.fetchall()
     for idDossier, saisie, animal in res:
         print(f"A participé à la procédure concernant le patient numéro {animal} et inscrite le {saisie} dans le dossier médical numéro {idDossier}")
-        
+
 def afficherRapportActiviteAssistant(cur):
     cur.execute('''SELECT idAssist, nom, prenom FROM Assistant''')
     res = cur.fetchall()
@@ -811,4 +833,3 @@ def afficherRapportActiviteAssistant(cur):
     res = cur.fetchall()
     for idDossier, saisie, animal in res:
         print(f"A participé à la procédure concernant le patient numéro {animal} et inscrite le {saisie} dans le dossier médical numéro {idDossier}")
-    

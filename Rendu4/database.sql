@@ -11,6 +11,7 @@ CREATE TABLE Users
 CREATE TABLE Admin
 (
     idAdmin INTEGER PRIMARY KEY,
+
     login CHAR(6) NOT NULL,
     motDePasse VARCHAR(30) NOT NULL
 );
@@ -122,13 +123,13 @@ CREATE TABLE autorisePour (
     medicament VARCHAR(11) REFERENCES Medicament(nomMol),
     espece INTEGER REFERENCES Espece(idEspece),
     PRIMARY KEY (medicament, espece)
-);  
+);
 
 CREATE TABLE EstSuiviPar (
     animal INTEGER REFERENCES Animal(idAnimal),
     veterinaire INTEGER REFERENCES Veterinaire(idVet),
     debut DATE NOT NULL,
-    fin DATE, 
+    fin DATE,
     PRIMARY KEY (animal, veterinaire)
 );
 -- On pensera à vérifier la contrainte complexe de minimalité dans la couche applicative'
@@ -185,7 +186,7 @@ INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (5, 'https://messuperresul
 -- Clients
 
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (1, 'Darmanin', 'Gérald', '1982-10-11', 'Hôtel de Beauvau, Paris', '0607080910');
-	
+
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (2, 'Borne', 'Elizabeth', '1961-04-18', 'Hôtel de Matignon, Paris 7ème', '0607883911');
 
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (3, 'Macron', 'Emmanuel', '1977-12-21', 'Palais de l Elysee, Paris 8ème', '0907688920');
@@ -333,5 +334,3 @@ INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (2, 1, '2017-08-27
 INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (3, 3, '2014-09-24', '2022-10-08');
 
 INSERT INTO EstPossedePar (animal, client, debut, fin) VALUES (4, 1, '2013-02-24', '2017-11-18');
-
-

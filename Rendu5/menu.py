@@ -2,20 +2,12 @@ from sys import exit
 import psycopg2
 from fonctions import *
 
-"""
+# --------- Ceci sont les coordonnées de connexion de Nils. Avant de tester le code penser à modifier ces coordonnées ! --------- #
 conn = psycopg2.connect(
       user = "nf18a068",
       password = "Lm0mhUpSY50v",
       host = "tuxa.sme.utc",
       database = "dbnf18a068"
-)
-cur = conn.cursor()
-"""
-conn = psycopg2.connect(
-      user = "postgres",
-      password = "mynewpassword",
-      host = "localhost",
-      database = "postgres"
 )
 cur = conn.cursor()
 
@@ -66,7 +58,8 @@ if (typeUtilisateur == "veterinaire"):
         2. Ajouter un dossier médical\n
         3. Ajouter un client\n
         4. Ajouter un animal\n
-        5. Modifier un animal''')
+        5. Modifier un animal\n
+        6. Ajouter un medicament\n''')
         choixVet = int(input("Votre choix ? : "))
         if (choixVet == 0) :
             exit()
@@ -80,6 +73,8 @@ if (typeUtilisateur == "veterinaire"):
             ajouterAnimal(cur, conn)
         elif (choixVet == 5) :
             modifierAnimal(cur, conn)
+        elif (choixVet == 6) :
+            ajoutMedicament(cur, conn)
 
     #creer dossier medicaux
     #acceder aux données des patients, clients
@@ -94,7 +89,8 @@ if (typeUtilisateur == "assistant"):
         '''------Menu Assistant------\n
         0. Quitter\n
         1. Consulter les infos d'un animal\n
-        2. Ajouter un dossier médical''')
+        2. Ajouter un dossier médical\n
+        3. Ajouter un medicament''')
         choixAssist = int(input("Votre choix ? : "))
         if (choixAssist == 0) :
             exit()
@@ -102,7 +98,9 @@ if (typeUtilisateur == "assistant"):
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
         elif (choixAssist == 2) :
             creerDossierMedical(cur, conn)
-    
+        elif (choixAssist == 3) :
+            ajoutMedicament(cur, conn)
+
     #creer dossier medicaux
     #acceder aux données des patients, clients
 #Mode Administrateur
@@ -126,14 +124,11 @@ if (succesConnexionAdministrateur) :
                 0. Revenir au menu précédent\n
                 1. Creer un client\n
                 2. Mettre a jour un client\n
-                3. Supprimer un client\n
-                4. Creer un veterinaire\n
-                5. Mettre a jour un veterinaire\n
-                6. Supprimer un veterinaire\n
-                7. Creer un assistant\n
-                8. Mettre a jour un assistant\n
-                9. Supprimer un assistant\n
-                10. Creer un administrateur\n''')
+                3. Creer un veterinaire\n
+                4. Mettre a jour un veterinaire\n
+                5. Creer un assistant\n
+                6. Mettre a jour un assistant\n
+                7. Creer un administrateur\n''')
                 choixModif= int(input("Votre choix ? : "))
                 if (choixModif == 0) :
                     choixAdmin = -1
@@ -143,20 +138,14 @@ if (succesConnexionAdministrateur) :
                 elif (choixModif == 2) :
                     updateUser(cur, conn, "client")
                 elif (choixModif == 3) :
-                    pass #à remplacer par l'appel à la bonne méthode
-                elif (choixModif == 4) :
                     ajouterUser(cur, conn, "veterinaire")
-                elif (choixModif == 5) :
+                elif (choixModif == 4) :
                     updateUser(cur, conn, "veterinaire")
-                elif (choixModif == 6) :
-                    pass #à remplacer par l'appel à la bonne méthode
-                elif (choixModif == 7) :
+                elif (choixModif == 5) :
                     ajouterUser(cur, conn, "assistant")
-                elif (choixModif == 8) :
+                elif (choixModif == 6) :
                     updateUser(cur, conn, "assistant")
-                elif (choixModif == 9) :
-                    pass #à remplacer par l'appel à la bonne méthode
-                elif (choixModif == 10) :
+                elif (choixModif == 7) :
                     ajouterAdmin(cur, conn)
         elif (choixAdmin == 2) :
             choixStats = -1
