@@ -731,3 +731,27 @@ def ajouterResultatAnalyse(cur, conn) :
     print(f"Le résultat d'analyse d'id {idResultat} correspondant au lien {lienResultat} a été inséré avec succes")
     #On retourne l'id du résultat d'analyse nouvellement inséré
     return idResultat
+
+def statistiques_traitement(cur) :
+    cur.execute('''SELECT idDossier, debutTraitement, dureeTraitement FROM DossierMedical
+                WHERE debutTraitement + interval '1' day * dureeTraitement < current_date;''')
+    res = cur.fetchall()
+    if (not res) :
+        print("echec de la requête pour les statistiques des traitements encore en cours")
+    colonnes = ("idDossier", "debutTraitement", "dureeTraitement")
+    affichageSelect(colonnes, res)
+
+def ajouterAdmin(cur, conn) :
+    username = input(f"Entrer le login du nouvel Administrateur : ")
+    password = input(f"Entrer le mot de passe du nouvel Administrateur : ")
+    id_admin = id_suivant(cur, "Admin", "idAdmin")
+    try:
+        cur.execute('''
+                INSERT INTO Admin (idAdmin, login, motDePasse)
+                VALUES (%s, %s, %s)''',
+                (id_admin, username, password))
+        print(f"Création avec succès du compte Administrateur, id : {id_admin}\n " )
+    except psycopg2.errors:
+        print("Attention, erreur lors de l'insertion ! Un administrateur avec le meme nom existe peut etre.")
+        return
+    conn.commit()
