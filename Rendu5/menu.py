@@ -2,6 +2,7 @@ from sys import exit
 import psycopg2
 from fonctions import *
 
+"""
 conn = psycopg2.connect(
       user = "nf18a068",
       password = "Lm0mhUpSY50v",
@@ -9,7 +10,14 @@ conn = psycopg2.connect(
       database = "dbnf18a068"
 )
 cur = conn.cursor()
-
+"""
+conn = psycopg2.connect(
+      user = "postgres",
+      password = "mynewpassword",
+      host = "localhost",
+      database = "postgres"
+)
+cur = conn.cursor()
 
 choixModeConnexion = -1
 succesConnexionAdministrateur = False
