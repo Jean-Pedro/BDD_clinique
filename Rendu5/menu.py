@@ -124,7 +124,8 @@ if (succesConnexionAdministrateur) :
                 6. Supprimer un veterinaire\n
                 7. Creer un assistant\n
                 8. Mettre a jour un assistant\n
-                9. Supprimer un assistant\n''')
+                9. Supprimer un assistant\n
+                10. Creer un administrateur\n''')
                 choixModif= int(input("Votre choix ? : "))
                 if (choixModif == 0) :
                     choixAdmin = -1
@@ -147,6 +148,8 @@ if (succesConnexionAdministrateur) :
                     updateUser(cur, conn, "assistant")
                 elif (choixModif == 9) :
                     pass #à remplacer par l'appel à la bonne méthode
+                elif (choixModif == 10) :
+                    ajouterAdmin(cur, conn)
         elif (choixAdmin == 2) :
             choixStats = -1
             while choixStats != 0 :
@@ -156,6 +159,7 @@ if (succesConnexionAdministrateur) :
                   2. Voir les médicaments consommés\n
                   3. Voir un rapport d'activité d'un vétérinaire\n
                   4. Voir un rapport d'activité d'un assistant\n
+                  5. Voir les traitements en cours\n
                   ''')
                 choixStats = int(input("Votre choix ? : "))
                 if (choixStats == 0) :
@@ -169,6 +173,8 @@ if (succesConnexionAdministrateur) :
                     pass #à remplacer par l'appel à la bonne méthode
                 elif (choixStats == 4) :
                     pass #à remplacer par l'appel à la bonne méthode
+                elif (choixStats == 5) :
+                    statistiques_traitement(cur)
 
 
 
