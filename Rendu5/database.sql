@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS Users CASCADE;
 CREATE TABLE Users
 (
@@ -158,7 +157,7 @@ CREATE TABLE EstPossedePar(
 
 -- Vue pour les statistiques de consommation de médicaments
 CREATE VIEW quantiteMedicamentConsommee AS
-SELECT M.nomMol, M.quantiteMedicamentJour*DM.dureeTraitement AS quantiteTotaleConsommee
+SELECT M.nomMol, sum(M.quantiteMedicamentJour*DM.dureeTraitement) AS quantiteTotaleConsommee
 FROM ContientMedicDoss AS CMD
 JOIN DossierMedical AS DM ON CMD.dossier = DM.idDossier
 JOIN Medicament AS M ON CMD.medicament = M.nomMol
