@@ -237,8 +237,9 @@ def ajouterUser(cur, conn, typeUtilisateur) :
         return
     conn.commit()
 
+
 def updateUser(cur, conn, typeUtilisateur):
-    print("Voici tous les utilisateurs : ")
+    print(f"Voici tous les {typeUtilisateur}s : ")
 
     if (typeUtilisateur == 'client'):
         cur.execute('''SELECT * FROM Client''')
@@ -286,7 +287,7 @@ def updateUser(cur, conn, typeUtilisateur):
             idEspeceChoisie = ajouterEspece(cur, conn)
 
 
-    #On tente d'insérer le client :
+    #On tente de mettre à jour le client :
     try:
         if (typeUtilisateur == "client"):
             cur.execute('''
@@ -301,6 +302,46 @@ def updateUser(cur, conn, typeUtilisateur):
             cur.execute('''
                 UPDATE Veterinaire SET nom = %s, prenom = %s, dateNaissance = %s, adresse = %s, tel = %s, specialite = %s WHERE idVet = %s''',
                 (nom, prenom, dateNaissance, adresse, tel, idEspeceChoisie, idUtilisateurChoisie))
+
+        print(f"{typeUtilisateur} mis a jour avec succès.")
+    except psycopg2.errors:
+        print(f"Echec de l'update")
+        return
+    conn.commit()
+
+def deleteUser(cur, conn, typeUtilisateur):
+    print(f"Voici tous les {typeUtilisateur}s : ")
+
+    if (typeUtilisateur == 'client'):
+        cur.execute('''SELECT * FROM Client''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel')
+    elif (typeUtilisateur == 'assistant'):
+        cur.execute('''SELECT * FROM Assistant''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+    else:
+        cur.execute('''SELECT * FROM Veterinaire''')
+        colonnes = ('idClient', 'nom', 'prenom', 'dateNaissance', 'adresse', 'tel', 'specialite')
+
+    res = cur.fetchall()
+    affichageSelect(colonnes, res)
+    ligneUtilisateurChoisie = int(input(f"Entrez le numéro de ligne du {typeUtilisateur} a supprimer : "))
+    idUtilisateurChoisie = res[ligneUtilisateurChoisie][0]
+
+
+    
+    #On tente de supprimer le client et le user associé dans la table users :
+    try:
+        if (typeUtilisateur == "client"):
+            cur.execute('''DELETE FROM Client WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
+            
+        elif (typeUtilisateur == "assistant"):
+            cur.execute('''DELETE FROM Assistant WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
+
+        elif (typeUtilisateur == "veterinaire"):
+            cur.execute('''DELETE FROM Veterinaire WHERE idClient = %s''', (idUtilisateurChoisie))
+            cur.execute('''DELETE FROM Users WHERE idClient = %s''', (idUtilisateurChoisie))
 
         print(f"{typeUtilisateur} mis a jour avec succès.")
     except psycopg2.errors:

@@ -67,7 +67,7 @@ if (typeUtilisateur == "veterinaire"):
         elif (choixVet == 2) :
             creerDossierMedical(cur, conn)
         elif (choixVet == 3) :
-            ajouterClient(cur, conn)
+            ajouterUser(cur, conn, "client")
         elif (choixVet == 4) :
             ajouterAnimal(cur, conn)
         elif (choixVet == 5) :
@@ -80,19 +80,19 @@ if (typeUtilisateur == "veterinaire"):
 
 if (typeUtilisateur == "assistant"):
     print("Connexion assistant réussie")
-    choixVet = -1
+    choixAssist = -1
     while(choixAssist != 0):
         print(
         '''------Menu Assistant------\n
         0. Quitter\n
         1. Consulter les infos d'un animal\n
         2. Ajouter un dossier médical''')
-        choixVet = int(input("Votre choix ? : "))
-        if (choixVet == 0) :
+        choixAssist = int(input("Votre choix ? : "))
+        if (choixAssist == 0) :
             exit()
-        elif (choixVet == 1) :
+        elif (choixAssist == 1) :
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
-        elif (choixVet == 2) :
+        elif (choixAssist == 2) :
             creerDossierMedical(cur, conn)
     
     #creer dossier medicaux
