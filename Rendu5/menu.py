@@ -1,3 +1,4 @@
+from sys import exit
 import psycopg2
 from fonctions import *
 
@@ -8,7 +9,6 @@ conn = psycopg2.connect(
       database = "dbnf18a068"
 )
 cur = conn.cursor()
-
 
 
 choixModeConnexion = -1
@@ -80,7 +80,7 @@ if (typeUtilisateur == "veterinaire"):
 
 if (typeUtilisateur == "assistant"):
     print("Connexion assistant réussie")
-    choixVet = -1
+    choixAssist = -1
     while(choixAssist != 0):
         print(
         '''------Menu Assistant------\n
@@ -90,9 +90,9 @@ if (typeUtilisateur == "assistant"):
         choixVet = int(input("Votre choix ? : "))
         if (choixVet == 0) :
             exit()
-        elif (choixVet == 1) :
+        elif (choixAssist == 1) :
             afficherInfosAnimal(cur, idUtilisateur, typeUtilisateur)
-        elif (choixVet == 2) :
+        elif (choixAssist == 2) :
             creerDossierMedical(cur, conn)
     
     #creer dossier medicaux
@@ -166,9 +166,9 @@ if (succesConnexionAdministrateur) :
                 elif (choixStats == 2) :
                     statistiques_medicament(cur)
                 elif (choixStats == 3) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    afficherRapportActiviteVeto(cur)
                 elif (choixStats == 4) :
-                    pass #à remplacer par l'appel à la bonne méthode
+                    afficherRapportActiviteAssistant(cur)
 
 
 

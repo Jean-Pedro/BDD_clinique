@@ -627,7 +627,7 @@ def creerDossierMedical(cur, conn):
     while (idChoisi != -1):
         #Insertion du médicament choisi
         try :
-            cur.execute('''INSERT INTO  VALUES (%s, %s) ''',
+            cur.execute('''INSERT INTO ContientMedicDoss VALUES (%s, %s) ''',
                         (idChoisi, idDossier))
             print(f"Insertion du médicament {idChoisi} avec succès.")
         except psycopg2.errors :
@@ -644,7 +644,7 @@ def creerDossierMedical(cur, conn):
     cur.execute('''SELECT idResultat , lien FROM ResultatAnalyse ''')
     res = cur.fetchall()
     nombreResultTotal = len(res)
-    affichageSelect(("id", "Nom", "Prénom"), res)
+    affichageSelect(("id", "Lien des résultats d'analyse"), res)
     idChoisi = -1
     while (idChoisi != -1):
         estPasDedans= ""
@@ -673,7 +673,8 @@ def creerDossierMedical(cur, conn):
                 idChoisi = res[choisi][0] if choisi != -1 else -1
         else :
             #On doit créer un nouveau résultat d'analyse
-            idChoisi = ajouterResultatAnalyse(cur, conn)    
+            idChoisi = ajouterResultatAnalyse(cur, conn)
+    conn.commit()
     
     
     
@@ -690,3 +691,52 @@ def ajouterResultatAnalyse(cur, conn) :
     print(f"Le résultat d'analyse d'id {idResultat} correspondant au lien {lienResultat} a été inséré avec succes")
     #On retourne l'id du résultat d'analyse nouvellement inséré
     return idResultat
+
+def afficherRapportActiviteVeto(cur):
+    cur.execute('''SELECT idVet, nom, prenom FROM Veterinaire''')
+    res = cur.fetchall()
+    nombreVetoTotal = len(res)
+    affichageSelect(("id", "Nom", "Prénom"), res)
+    vetoChoisi = int(input("Entrez la ligne du vétérinaire recherché : "))
+    while (vetoChoisi < 0 or vetoChoisi > nombreVetoTotal) :
+        print("Ligne choisie incorrect, réessayez.")
+        vetoChoisi = int(input("Entrez la ligne du vétérinaire recherché : "))
+    idVetoChoisi = res[vetoChoisi][0]
+    cur.execute("SELECT animal, debut FROM EstSuiviPar WHERE veterinaire=%s AND fin IS NULL", (idVetoChoisi,))
+    #Affichage des patients en cours de suivi
+    res = cur.fetchall()
+    for animal, debut in res:
+        print(f"Suit le patient numéro {animal} depuis le {debut}")
+    #Affichage des patients précedemment suivi
+    cur.execute("SELECT animal, debut, fin FROM EstSuiviPar WHERE veterinaire=%s AND fin IS NOT NULL", (idVetoChoisi,))
+    res = cur.fetchall()
+    for animal, debut, fin in res:
+        print(f"A suivi le patient numéro {animal} du {debut} au {fin}")
+    #Affichage des dossiers où le vétérinaire a été vétérinaire prescripteur
+    cur.execute("SELECT idDossier, saisie, animal FROM DossierMedical WHERE veterinairePrescripteur=%s", (idVetoChoisi,))
+    res = cur.fetchall()
+    for idDossier, saisie, animal in res:
+        print(f"A été le vétérinaire prescripteur du traitement lors de la procédure concernant le patient numéro {animal} et inscrite le {saisie} dans le dossier médical numéro {idDossier}")
+    #Affichage des numéros de dossiers où le vétérinaire a participé
+    cur.execute("SELECT AFaitVet.dossier, DossierMedical.saisie, DossierMedical.animal FROM AFaitVet JOIN DossierMedical ON AFaitVet.dossier = DossierMedical.idDossier WHERE veterinaire=%s", (idVetoChoisi,))
+    res = cur.fetchall()
+    for idDossier, saisie, animal in res:
+        print(f"A participé à la procédure concernant le patient numéro {animal} et inscrite le {saisie} dans le dossier médical numéro {idDossier}")
+        
+def afficherRapportActiviteAssistant(cur):
+    cur.execute('''SELECT idAssist, nom, prenom FROM Assistant''')
+    res = cur.fetchall()
+    nombreAssistTotal = len(res)
+    affichageSelect(("id", "Nom", "Prénom"), res)
+    assistChoisi = int(input("Entrez la ligne de l'assistant recherché : "))
+    while (assistChoisi < 0 or assistChoisi > nombreAssistTotal) :
+        print("Ligne choisie incorrect, réessayez.")
+        assistChoisi = int(input("Entrez la ligne de l'assistant recherché : "))
+    idAssistChoisi = res[assistChoisi][0]
+    cur.execute("SELECT animal, debut FROM EstSuiviPar WHERE assistant=%s AND fin IS NULL", (idAssistChoisi,))
+    #Affichage des numéros de dossiers où l'assistant a participé
+    cur.execute("SELECT AFaitAssist.dossier, DossierMedical.saisie, DossierMedical.animal FROM AFaitAssist JOIN DossierMedical ON AFaitAssist.dossier = DossierMedical.idDossier WHERE assistant=%s", (idAssistChoisi,))
+    res = cur.fetchall()
+    for idDossier, saisie, animal in res:
+        print(f"A participé à la procédure concernant le patient numéro {animal} et inscrite le {saisie} dans le dossier médical numéro {idDossier}")
+    
