@@ -418,7 +418,7 @@ def ajouterAnimal(cur, conn):
           0. petite\n
           1. moyenne\n
           2. autre''')
-    while(choixTaille <0 and choixTaille>2):
+    while(choixTaille <0 or choixTaille>2):
         choixTaille = int(input("Votre choix ? (0,1,2)"))
         if (choixTaille <0 and choixTaille>2) :
             print("choix incorrect, reessayez.")
