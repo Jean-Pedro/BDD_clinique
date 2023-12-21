@@ -210,14 +210,13 @@ INSERT INTO Animal (idAnimal, nom, espece, numPuceId, numPasseport, taille) VALU
 
 -- Veterinaires
 
-INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (10,'Pontoire', 'Julien', '2003-12-01', '36 Rue de l''Eglise', '0632458956', 1);
+INSERT INTO Veterinaire (idVet, infos, specialite) VALUES (10, '{"nom" : "Pontoire", "prenom" : "Julien", "dateNaissance" : "2003-12-01", "adresse" : "36 Rue de l''Eglise", "tel" : "0632458956"}', 1);
 
-INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (11, 'Biffe', 'Simon', '2003-12-02', '25 Avenue de la Gare', '0645769512', 4);
+INSERT INTO Veterinaire (idVet, infos, specialite) VALUES (11, '{"nom" : "Biffe", "prenom" : "Simon", "dateNaissance" : "2003-12-02", "adresse" : "25 Avenue de la Gare", "tel" : "0645769512"}', 4);
 
-INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (12, 'Vital', 'Simon', '2003-12-03', '12 Rue de Paris', '0745126398', 2);
+INSERT INTO Veterinaire (idVet, infos, specialite) VALUES (12, '{"nom" : "Vital", "prenom" : "Simon", "dateNaissance" : "2003-12-03", "adresse" : "12 Rue de Paris", "tel" : "0745126398"}', 2);
 
-INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (13, 'Ragot', 'Nils', '2003-12-04', '15 rue d''Amiens', '0745864297', 2);
-
+INSERT INTO Veterinaire (idVet, infos, specialite) VALUES (13, '{"nom" : "Ragot", "prenom" : "Nils", "dateNaissance" : "2003-12-04", "adresse" : "15 rue d''Amiens", "tel" : "0745864297"}', 2);
 
 
 -- DossierMédical
