@@ -17,6 +17,11 @@ SELECT * from DossierMedical dm
 JOIN ContientMedicDoss cmd ON dm.idDossier = cmd.dossier
 JOIN Medicament m ON cmd.medicament = m.nomMol;
 
+-- Les résultats d'analyse associés à un dossier médical
+
+SELECT resultatAnalyse FROM DossierMedical WHERE idDossier=1;
+SELECT resultatAnalyse FROM DossierMedical WHERE idDossier=2;
+
 
 -- le nom de l'espèce spécialité du vétérinaire
 
@@ -106,7 +111,7 @@ JOIN EstSuiviPar esp ON esp.animal = ani.idAnimal
 JOIN Veterinaire vet ON esp.veterinaire = vet.idVet 
 WHERE vet.idVet=1; 
 
--- Les traitements qu'ils prescrits
+-- Les traitements que le vétérinaire prescrivent
 
 SELECT prenom, nom, idDossier, saisie from DossierMedical dm
 JOIN Veterinaire vet ON vet.idVet = dm.veterinairePrescripteur  
@@ -122,6 +127,7 @@ SELECT dm.* FROM DossierMedical dm JOIN Animal a ON dm.animal = a.idAnimal WHERE
 -- Donner le dossier médical d'un animal à partir de son id
 
 SELECT dm.* FROM DossierMedical dm JOIN Animal a ON dm.animal = a.idAnimal WHERE a.idAnimal = 3 ORDER BY saisie;
+
 
 
 
