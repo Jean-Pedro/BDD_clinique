@@ -191,12 +191,11 @@ INSERT INTO Espece (idEspece, typeEspece, intitulePrecis) VALUES (4, 'oiseau', '
 
 -- Assistants
 
-INSERT INTO Assistant (idAssist, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (7, 'Renaud', 'Augustin', '1965-02-24', '124 Rue de Paris', '0685159675', 1);
+INSERT INTO Assistant (idAssist, infos, specialite) VALUES (7, '{"nom" : "Renaud", "prenom" : "Augustin", "dateNaissance" : "1965-02-24", "adresse" : "124 Rue de Paris", "tel" : "0685159675"}', 1);
 
-INSERT INTO Assistant (idAssist, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (8,'Eberhardt', 'Alexandre', '1965-02-25', '12 rue des fleurs', '0684559671', 4);
+INSERT INTO Assistant (idAssist, infos, specialite) VALUES (8, '{"nom" : "Eberhardt", "prenom" : "Alexandre", "dateNaissance" : "1965-02-25", "adresse" : "12 rue des fleurs", "tel" : "0684559671"}', 4);
 
-INSERT INTO Assistant (idAssist, nom, prenom, dateNaissance, adresse, tel, specialite) VALUES (9,'Fouinat', 'Quentin', '1965-02-26', '34 avenue du Port', '0645627891', 2);
-
+INSERT INTO Assistant (idAssist, infos, specialite) VALUES (9, '{"nom" : "Fouinat", "prenom" : "Quentin", "dateNaissance" : "1965-02-26", "adresse" : "34 avenue du Port", "tel" : "0645627891"}', 2);
 
 -- Animal
 
