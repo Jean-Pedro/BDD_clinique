@@ -26,11 +26,7 @@ CREATE TABLE Medicament (
 DROP TABLE IF EXISTS Client CASCADE;
 CREATE TABLE Client (
     idClient INTEGER PRIMARY KEY REFERENCES Users(idUser),
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
-    dateNaissance DATE NOT NULL,
-    adresse VARCHAR(100) NOT NULL,
-    tel VARCHAR(11) NOT NULL
+    infos JSON NOT NULL,
 );
 
 DROP TABLE IF EXISTS Espece CASCADE;
@@ -45,11 +41,7 @@ CREATE TABLE Espece(
 DROP TABLE IF EXISTS Assistant CASCADE;
 CREATE TABLE Assistant (
     idAssist INTEGER PRIMARY KEY REFERENCES Users(idUser),
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
-    dateNaissance DATE NOT NULL,
-    adresse VARCHAR(100) NOT NULL,
-    tel VARCHAR(11) NOT NULL,
+    infos JSON,
     specialite INTEGER REFERENCES Espece(idEspece)
 );
 
@@ -67,11 +59,7 @@ CREATE TABLE Animal (
 DROP TABLE IF EXISTS Veterinaire CASCADE;
 CREATE TABLE Veterinaire (
     idVet INTEGER PRIMARY KEY REFERENCES Users(idUser),
-    nom VARCHAR(100) NOT NULL,
-    prenom VARCHAR(100) NOT NULL,
-    dateNaissance DATE NOT NULL,
-    adresse VARCHAR(100) NOT NULL,
-    tel VARCHAR(11) NOT NULL,
+    infos JSON,
     specialite INTEGER REFERENCES Espece(idEspece)
 );
 
