@@ -23,14 +23,6 @@ CREATE TABLE Medicament (
     quantiteMedicamentJour INTEGER NOT NULL
 );
 
-
-
-DROP TABLE IF EXISTS ResultatAnalyse CASCADE;
-CREATE TABLE ResultatAnalyse (
-    idResultat INTEGER PRIMARY KEY,
-    lien VARCHAR(150)
-);
-
 DROP TABLE IF EXISTS Client CASCADE;
 CREATE TABLE Client (
     idClient INTEGER PRIMARY KEY REFERENCES Users(idUser),
@@ -95,6 +87,7 @@ CREATE TABLE DossierMedical (
     saisie DATE NOT NULL,
     animal INTEGER REFERENCES Animal(idAnimal) NOT NULL,
     veterinairePrescripteur INTEGER REFERENCES Veterinaire(idVet) NOT NULL,
+    resultatAnalyse JSON,
     CHECK (mesureTaille IS NOT NULL OR mesurePoids IS NOT NULL)
 );
 
@@ -111,14 +104,6 @@ CREATE TABLE AFaitAssist(
 	assistant INTEGER REFERENCES Assistant(idAssist),
 	dossier INTEGER REFERENCES DossierMedical(idDossier),
 	PRIMARY KEY (assistant, dossier)
-);
-
-
-DROP TABLE IF EXISTS ContientResultDoss CASCADE;
-CREATE TABLE ContientResultDoss(
-	resultat INTEGER REFERENCES ResultatAnalyse(idResultat),
-	dossier INTEGER REFERENCES DossierMedical(idDossier),
-	PRIMARY KEY (resultat, dossier)
 );
 
 DROP TABLE IF EXISTS ContientMedicDoss CASCADE;
