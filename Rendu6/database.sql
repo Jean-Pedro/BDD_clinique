@@ -175,19 +175,6 @@ INSERT INTO Medicament (nomMol, description, quantiteMedicamentJour) VALUES ('pa
 INSERT INTO Medicament (nomMol, description, quantiteMedicamentJour) VALUES ('GSE', 'Désinfectant, utile das le cas de grippe aviaire', 50);
 
 
--- ResultatAnalyse
-
-INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (1, 'https://messuperresultats.com/z5VytYNpQJJYY6D-gUq13A');
-
-INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (2, 'https://messuperresultats.com/z5VCTRYJQJJYY6D-gU236A');
-
-INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (3, 'https://messuperresultats.com/z5FT486965DERHTD6YY6D-gUq13A');
-
-INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (4, 'https://messuperresultats.com/z5VytYNpSS682F-h5613A');
-
-INSERT INTO ResultatAnalyse (idResultat, lien) VALUES (5, 'https://messuperresultats.com/DRTYFTKU849HTYF5-u8563A');
-
-
 -- Clients
 
 INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (1, 'Darmanin', 'Gérald', '1982-10-11', 'Hôtel de Beauvau, Paris', '0607080910');
@@ -248,11 +235,12 @@ INSERT INTO Veterinaire (idVet, nom, prenom, dateNaissance, adresse, tel, specia
 
 -- DossierMédical
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, resultatAnalyse) VALUES (1, 10, 5, '2003-12-04', 20, 'Blessure à la patte', 'Guérir la patte', '2003-12-03', 1, 10, '["https://messuperresultats.com/z5VytYNpQJJYY6D-gUq13A"]');
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (2, 100, 50, '2004-12-04', 30, 'Blessure à la tête', 'Guérir la tête', '2004-12-03', 2, 10);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, resultatAnalyse) VALUES (2, 100, 50, '2004-12-04', 30, 'Blessure à la tête', 'Guérir la tête', '2004-12-03', 2, 10, '["https://messuperresultats.com/z5VytYNpQJJYY6D-gUq13A", "https://messuperresultats.com/z5VCTRYJQJJYY6D-gU236A", "https://messuperresultats.com/z5VytYNpSS682F-h5613A"]');
 
-INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur) VALUES (3, 100, 50, '2013-01-04', 10, 'Puce', 'Appliquer le produit anti-puce', '2013-12-03', 3, 12);
+INSERT INTO DossierMedical (idDossier, mesureTaille, mesurePoids, debutTraitement, dureeTraitement, ObservationGenerale, descriptionProcedure, saisie, animal, veterinairePrescripteur, resultatAnalyse) VALUES (3, 100, 50, '2013-01-04', 10, 'Puce', 'Appliquer le produit anti-puce', '2013-12-03', 3, 12, '["https://messuperresultats.com/z5FT486965DERHTD6YY6D-gUq13A", "https://messuperresultats.com/DRTYFTKU849HTYF5-u8563A"]');
+
 
 
 
@@ -274,21 +262,6 @@ INSERT INTO AFaitAssist (assistant, dossier) VALUES (7, 3);
 INSERT INTO AFaitAssist (assistant, dossier) VALUES (8, 2);
 
 INSERT INTO AFaitAssist (assistant, dossier) VALUES (9, 1);
-
-
--- ContientResultDoss
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (1, 1);
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (1, 2);
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (2, 2);
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (3, 3);
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (4, 2);
-
-INSERT INTO ContientResultDoss (resultat, dossier) VALUES (5, 3);
 
 
 -- ContientMedicDoss
