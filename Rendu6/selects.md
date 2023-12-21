@@ -25,12 +25,12 @@ SELECT resultatAnalyse FROM DossierMedical WHERE idDossier=2;
 
 -- le nom de l'espèce spécialité du vétérinaire
 
-SELECT vet.nom, esp.intitulePrecis FROM Veterinaire vet 
+SELECT vet.infos->>'nom' AS nom, esp.intitulePrecis FROM Veterinaire vet 
 JOIN Espece esp ON vet.specialite = esp.idEspece;
 
 -- le nom de l'espèce spécialité de l'assistant
 
-SELECT ass.nom, esp.intitulePrecis FROM Assistant ass 
+SELECT ass.infos->>'nom' AS nom, esp.intitulePrecis FROM Assistant ass 
 JOIN Espece esp ON ass.specialite = esp.idEspece;
 
 
@@ -93,9 +93,9 @@ where EPP.client = 1;
 
 -- infos persos
 
-SELECT prenom, nom, dateNaissance, adresse, tel, e.typeespece as specialite from Veterinaire vet
+SELECT infos->>'prenom' AS prenom, infos->>'nom' AS nom, CAST(infos->>'dateNaissance' AS DATE) AS dateNaissance, infos->>'adresse' AS adresse, infos->>'tel' AS tel, e.typeespece as specialite FROM Veterinaire vet
 Join Espece e On e.idEspece = vet.specialite  
-where idvet = 1;
+where idvet = 10;
 
 -- Les dossiers médicaux que le vétérinaire a fait
 
@@ -106,16 +106,16 @@ WHERE vet.idVet=1;
 
 -- Les animaux suivis par le vétérinaire
 
-SELECT vet.prenom, vet.nom, ani.idAnimal, ani.nom from Animal ani
+SELECT vet.infos->>'prenom' AS prenom, vet.infos->>'nom' AS nom, ani.idAnimal, ani.nom from Animal ani
 JOIN EstSuiviPar esp ON esp.animal = ani.idAnimal
 JOIN Veterinaire vet ON esp.veterinaire = vet.idVet 
-WHERE vet.idVet=1; 
+WHERE vet.idVet=11; 
 
 -- Les traitements que le vétérinaire prescrivent
 
-SELECT prenom, nom, idDossier, saisie from DossierMedical dm
+SELECT infos->>'prenom' AS prenom, infos->>'nom' AS nom, idDossier, saisie from DossierMedical dm
 JOIN Veterinaire vet ON vet.idVet = dm.veterinairePrescripteur  
-WHERE vet.idVet=1; 
+WHERE vet.idVet=12; 
 
 
 
