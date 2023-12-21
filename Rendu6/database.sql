@@ -26,7 +26,7 @@ CREATE TABLE Medicament (
 DROP TABLE IF EXISTS Client CASCADE;
 CREATE TABLE Client (
     idClient INTEGER PRIMARY KEY REFERENCES Users(idUser),
-    infos JSON NOT NULL,
+    infos JSON NOT NULL
 );
 
 DROP TABLE IF EXISTS Espece CASCADE;
@@ -165,17 +165,17 @@ INSERT INTO Medicament (nomMol, description, quantiteMedicamentJour) VALUES ('GS
 
 -- Clients
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (1, 'Darmanin', 'Gérald', '1982-10-11', 'Hôtel de Beauvau, Paris', '0607080910');
+INSERT INTO Client (idClient, infos) VALUES (1, '{"nom" : "Darmanin", "prenom" : "Gérald", "dateNaissance" : "1982-10-11", "adresse" : "Hôtel de Beauvau, Paris", "tel" : "0607080910"}');
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (2, 'Borne', 'Elizabeth', '1961-04-18', 'Hôtel de Matignon, Paris 7ème', '0607883911');
+INSERT INTO Client (idClient, infos) VALUES (2, '{"nom" : "Borne", "prenom" : "Elizabeth", "dateNaissance" : "1961-04-18", "adresse" : "Hôtel de Matignon, Paris 7ème", "tel" : "0607883911"}');
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (3, 'Macron', 'Emmanuel', '1977-12-21', 'Palais de l Elysee, Paris 8ème', '0907688920');
+INSERT INTO Client (idClient, infos) VALUES (3, '{"nom" : "Macron", "prenom" : "Emmanuel", "dateNaissance" : "1977-12-21", "adresse" : "Palais de l Elysee, Paris 8ème", "tel" : "0907688920"}');
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (4, 'Béchu', 'Christophe', '1974-06-11', 'Hôtel de Roquelaure, 246, boulevard Saint-Germain, Paris 7ème', '0523748928');
+INSERT INTO Client (idClient, infos) VALUES (4, '{"nom" : "Béchu", "prenom" : "Christophe", "dateNaissance" : "1974-06-11", "adresse" : "Hôtel de Roquelaure, 246, boulevard Saint-Germain, Paris 7ème", "tel" : "0589748945"}');
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (5, 'Béchu', 'Marie-Hortense,', '1977-08-2', 'Hôtel de Roquelaure, 246, boulevard Saint-Germain, Paris 7ème', '0523748928');
+INSERT INTO Client (idClient, infos) VALUES (5, '{"nom" : "Béchu", "prenom" : "Marie-Hortense", "dateNaissance" : "1977-08-02", "adresse" : "Hôtel de Roquelaure, 246, boulevard Saint-Germain, Paris 7ème", "tel" : "0543748288"}');
 
-INSERT INTO Client (idClient, nom, prenom, dateNaissance, adresse, tel) VALUES (6, 'Retailleau', 'Sylvie', '1965-02-24', 'Pavillon Boncourt, 21 rue Descartes, Paris 5ème', '0523748928');
+INSERT INTO Client (idClient, infos) VALUES (6, '{"nom" : "Retailleau", "prenom" : "Sylvie", "dateNaissance" : "1965-02-24", "adresse" : "Pavillon Boncourt, 21 rue Descartes, Paris 5ème", "tel" : "0523848728"}');
 
 
 -- Espece
